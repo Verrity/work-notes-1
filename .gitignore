@@ -1,0 +1,5 @@
+# Локальные файлы Obsidian
+.obsidian/workspace.json
+# Кэш плагинов
+.obsidian/plugins/*/node_modules/
+.obsidian/plugins/*/dist/
