@@ -1,5 +1,7 @@
 {
   "readableLineLength": true,
   "newFileLocation": "folder",
-  "newFileFolderPath": "Other"
+  "newFileFolderPath": "Other",
+  "attachmentFolderPath": "Resources",
+  "alwaysUpdateLinks": true
 }
