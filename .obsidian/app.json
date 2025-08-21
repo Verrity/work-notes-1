@@ -1,3 +1,5 @@
 {
-  "readableLineLength": true
+  "readableLineLength": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "Other"
 }

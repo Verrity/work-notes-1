@@ -1011,11 +1011,14 @@
       "prompts": {
         "editedDefaults": {
           "bash": {
+            "basePrompt": "$",
+            "defaultUser": "",
+            "defaultHost": "",
+            "defaultDir": "",
+            "parsePromptRegexString": "",
             "autoUsePrompt": true,
             "autoUseLanguages": [
-              "bash",
-              "shell",
-              "sh"
+              "bash"
             ]
           }
         },
@@ -1144,7 +1147,7 @@
   "newPromptName": "",
   "alternateHighlightColorName": "",
   "languageBorderColorName": "",
-  "settingsType": "prompts",
+  "settingsType": "appearance",
   "langSpecificSettingsType": "",
   "languageSpecificLanguageName": ""
 }
