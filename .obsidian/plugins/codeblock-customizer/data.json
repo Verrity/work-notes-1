@@ -1009,7 +1009,16 @@
         "enableInSourceMode": false
       },
       "prompts": {
-        "editedDefaults": {},
+        "editedDefaults": {
+          "bash": {
+            "autoUsePrompt": true,
+            "autoUseLanguages": [
+              "bash",
+              "shell",
+              "sh"
+            ]
+          }
+        },
         "customPrompts": {},
         "includePromptsInCopy": false
       },
@@ -1028,7 +1037,7 @@
         "codeblock": {
           "activeLineColor": "--color-base-30",
           "backgroundColor": "--code-background",
-          "highlightColor": "--text-highlight-bg",
+          "highlightColor": "#FFD0001A",
           "alternateHighlightColors": {},
           "languageBorderColors": {},
           "textColor": "#A30505",
@@ -1135,7 +1144,7 @@
   "newPromptName": "",
   "alternateHighlightColorName": "",
   "languageBorderColorName": "",
-  "settingsType": "behavior",
+  "settingsType": "prompts",
   "langSpecificSettingsType": "",
   "languageSpecificLanguageName": ""
 }
