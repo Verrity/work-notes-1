@@ -14,23 +14,17 @@
 # Let NetworkManager manage all devices on this system
 network:
   version: 2
-  renderer: networkd
   ethernets:
     enp1s0:
       dhcp4: yes
     enp2s0:
-      dhcp4: no
-      dhcp6: no
-      link-local: [ ipv4 ]
-      routes:
-        - to: default
-          via: 192.168.1.1
       addresses:
         - 192.168.1.2/24
-      nameservers:
-        addresses:
-          - 192.168.1.1
+      dhcp4: no
       mtu: 1500
+      routes:
+        - to: 192.168.1.0/24
+          via: 192.168.1.1
 ```
 
 ### DHCP
