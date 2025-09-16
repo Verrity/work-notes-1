@@ -9,7 +9,7 @@
 ---
 
 ### Сеть
-Использую `netplan`:
+Это скорее пример, я сейчас не использую netplan
 ```yaml folded title="/etc/netplan/01-network-manager-all.yaml"
 # Let NetworkManager manage all devices on this system
 network:
@@ -29,7 +29,7 @@ network:
 
 ### DHCP
 Конфиг:
-```bash folded title="/etc/dhcp/dhcpd.conf"
+```shell folded title="/etc/dhcp/dhcpd.conf"
 # dhcpd.conf
 #
 # Sample configuration file for ISC dhcpd
@@ -223,3 +223,12 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 #}
 
 ```
+
+### TFTP
+```shell folded title="/etc/default/tftp-hpa"
+TFTP_USERNAME="tftp"
+TFTP_DIRECTORY="/srv/tftp"
+TFTP_ADDRESS="192.168.1.2:69"
+TFTP_OPTIONS="--secure --create"
+```
+Вот тут нужно поебаться с правами доступа. И обязательно сделать `chown` на `tftp`, подробнее гугли.

@@ -3,7 +3,7 @@
 3. Radius
 4. [[SNMP]]
 5. Enviroment
-6. System
+6. [[System]]
 7. Задачи
 
 Теги:
