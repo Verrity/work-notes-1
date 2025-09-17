@@ -232,3 +232,39 @@ TFTP_ADDRESS="192.168.1.2:69"
 TFTP_OPTIONS="--secure --create"
 ```
 Вот тут нужно поебаться с правами доступа. И обязательно сделать `chown` на `tftp`, подробнее гугли.
+### Vim
+```vim folded title="~/.vimrc"
+set clipboard+=unnamedplus
+set expandtab
+set smarttab
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+
+set number
+set foldcolumn=0
+set mouse=a
+
+colorscheme desert
+
+vnoremap <C-c> "+y
+vnoremap <C-v> "+p
+
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+```
+### .bashrc
+```shell folded title="~/.bashrc additionals"
+# Show a current active git branch in the shell prompt
+export PS1='\[\033[01;34m\] \w\[\033[01;33m\]$(__git_ps1)\[\033[01;34m\] \$\[\033[00m\] ' 
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+```
