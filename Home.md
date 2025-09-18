@@ -1,10 +1,10 @@
-1. WLC
+1. [[WLC]]
 2. ESR
 3. Radius
 4. [[SNMP]]
 5. Enviroment
 6. [[System]]
-7. Задачи
+7. [[Задачи]]
 
 Теги:
 * Репозитории
@@ -15,6 +15,7 @@
 * Выделяющиеся части
 #snmp SNMP часть
 #radius Radius часть
+#failover Failover часть
 * Подсистемы wlc
 #wlc_gre
 #wlc_sa
