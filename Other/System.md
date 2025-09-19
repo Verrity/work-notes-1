@@ -5,7 +5,7 @@
 ### Назад
 #### [[Home]]
 ### Далее
-####
+#### [[Скрипты bash в home-local-bin]]
 ---
 
 ### Сеть
@@ -270,9 +270,9 @@ fi
 ```
 
 ### VM запустить из командной строки
-```shell folded title="Запустить виртуальную машину"
+```bash folded title="Запустить виртуальную машину"
 virsh --connect qemu:///system start "ubuntu-22-04-lts-server"
 ```
-```shell folded title="Запустить UI приложение"
+```bash folded title="Запустить UI приложение"
 virt-manager --connect qemu:///system --show-domain-console "ubuntu-22-04-lts-server"
 ```
