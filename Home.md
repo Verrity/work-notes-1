@@ -1,5 +1,5 @@
 1. [[WLC]]
-2. ESR
+2. [[ESR]]
 3. Radius
 4. [[SNMP]]
 5. Enviroment
@@ -24,5 +24,7 @@
 #wlc_dmgr
 #wlc_apstm 
 #wlc_bridge
+* Подсистемы esr
+#esr_clish
 * Принадлежность информации
 #info Информация, не относящаяся напрямую к проекту, как заметки по SNMP, Radius общие
