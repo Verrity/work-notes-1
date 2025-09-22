@@ -89,7 +89,7 @@ fi
 Открытие `picocom` соединения
 ```shell folded title="sopen.sh"
 #!/bin/bash
-sudo picocom -b 115200 /dev/ttyUSB3
+sudo killall picocom; sudo picocom -b 115200 /dev/ttyUSB3
 ```
 
 Подключение к `techsupport` по `ssh` (пароль не дефолтный)
@@ -99,6 +99,7 @@ sshpass -p "password" ssh techsupport@192.168.1.1
 ```
 
 Копировать в буфер обмена  последовательность команд для начальной настройки `wlc`
+- Настраивать `ntp` только если установлен сервер
 ```shell folded title="rcopy_std_config.sh"
 #!/bin/sh
 echo "
@@ -109,6 +110,15 @@ config
 
 username admin
   password admin 
+exit
+
+no ntp broadcast-client enable
+ntp enable
+ntp server 192.168.1.10
+exit
+
+interface gigabitethernet 1/0/1
+no switchport access vlan
 exit
 
 username techsupport

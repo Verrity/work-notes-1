@@ -276,3 +276,6 @@ virsh --connect qemu:///system start "ubuntu-22-04-lts-server"
 ```bash folded title="Запустить UI приложение"
 virt-manager --connect qemu:///system --show-domain-console "ubuntu-22-04-lts-server"
 ```
+
+#### NTP server
+[Инструкция по установке](https://www.dmosk.ru/miniinstruktions.php?mini=ntp-server-ubuntu)
