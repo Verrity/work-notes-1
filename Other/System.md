@@ -9,23 +9,42 @@
 ---
 
 ### Сеть
-Это скорее пример, я сейчас не использую netplan
-```yaml folded title="/etc/netplan/01-network-manager-all.yaml"
-# Let NetworkManager manage all devices on this system
-network:
+```yaml folded title="/etc/netplan/10-my-config.yaml"
+nnetwork:
   version: 2
+  renderer: NetworkManager
   ethernets:
-    enp1s0:
-      dhcp4: yes
+    # Интерфейс для корпоративной сети
     enp2s0:
+      dhcp4: true
+      dhcp6: true
+      ipv6-address-generation: "stable-privacy"
+        # Интерфейс для локальной сети с устройствами. Управляется bridge "br-wlc".
+    enp1s0:
+      match:
+        macaddress: "8C:90:2D:FD:AB:9D"
+  bridges:
+    # Бридж на интерфейс enp1s0 для виртуальных машин и прочего
+    br-wlc:
       addresses:
-        - 192.168.1.2/24
-      dhcp4: no
-      mtu: 1500
-      routes:
-        - to: 192.168.1.0/24
-          via: 192.168.1.1
+      - "192.168.1.10/24"
+      nameservers:
+        addresses:
+        - 192.168.1.1
+      dhcp4: false
+      dhcp6: true
+      ipv6-address-generation: "stable-privacy"
+      interfaces:
+      - enp1s0
 ```
+```bash folded title="Настроить права доступа чтобы netplan не ругался"
+sudo chmod 600 /etc/netplan/10-my-config.yaml
+sudo chown root:root /etc/netplan/10-my-config.yaml
+```
+
+C
+
+
 
 ### DHCP
 Конфиг:
