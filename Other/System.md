@@ -6,6 +6,7 @@
 #### [[Home]]
 ### Далее
 #### [[Скрипты bash в home-local-bin]]
+####  [[Сетевые настройки]]
 ---
 
 ### Сеть
@@ -36,12 +37,29 @@ nnetwork:
       ipv6-address-generation: "stable-privacy"
       interfaces:
       - enp1s0
+  vlans:
+    # Подключение ПК
+    br-wlc.10:
+      id: 10
+      link: br-wlc
+    # Подключение ТД
+    br-wlc.20:
+      id: 20
+      link: br-wlc
+    # Подключение пользователей ТД
+    br-wlc.30:
+      id: 30
+      link: br-wlc
+    # Синхронизация
+    br-wlc.40:
+      id: 40
+      link: br-wlc
 ```
+
 ```bash folded title="Настроить права доступа чтобы netplan не ругался"
 sudo chmod 600 /etc/netplan/10-my-config.yaml
 sudo chown root:root /etc/netplan/10-my-config.yaml
 ```
-
 C
 
 
