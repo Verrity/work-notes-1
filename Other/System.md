@@ -8,6 +8,7 @@
 #### [[Скрипты bash в home-local-bin]]
 ####  [[Сетевые настройки]]
 #### [[Конфигурации]]
+
 ---
 
 ### Сеть
@@ -317,3 +318,7 @@ virt-manager --connect qemu:///system --show-domain-console "ubuntu-22-04-lts-se
 
 #### NTP server
 [Инструкция по установке](https://www.dmosk.ru/miniinstruktions.php?mini=ntp-server-ubuntu)
+
+#### VSCode
+Профиль ПК: ![[Resources/work-pc.code-profile]]
+Профиль ПК докер: ![[Resources/work-pc-docker.code-profile]]
