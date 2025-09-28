@@ -2,8 +2,7 @@
 ---
 ### Теги
 
-### Назад
-#### [[Home]]
+### [[Home|Назад]]
 ### Далее
 #### [[Скрипты bash в home-local-bin]]
 ####  [[Сетевые настройки]]
@@ -272,6 +271,7 @@ TFTP_OPTIONS="--secure --create"
 ```
 Вот тут нужно поебаться с правами доступа. И обязательно сделать `chown` на `tftp`, подробнее гугли.
 ### Vim
+`sudo apt install vim-gtk3`
 ```vim folded title="~/.vimrc"
 set clipboard+=unnamedplus
 set expandtab
