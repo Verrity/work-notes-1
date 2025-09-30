@@ -12,4 +12,13 @@
 `/mnt/config/etc/config/esr/esr_config.json`
 
 Связной с ESR - Дмитрий Коваленко
-
+#### Загрузить прошивку через u-boot
+Если ни одной прошивки на устройстве не осталось, и нельзя выйти из `uboot`, то вот решение
+```u-boot folded title="Команды для загрузки прошивки через u-boot (использовать gigabitethernet 1 !!!)"
+ipaddr 192.168.1.1
+serverip 192.168.1.10
+firmware_file wlc30.firmware
+saveenv
+netboot
+```
+`ipaddr` - адрес `wlc`; `serverip` - адрес `tftp` сервера ; `firmware_file` - имя файла на сервере ; `saveenv` - ?; `netboot` - загрузить прошивку и запустить устройство
