@@ -22,3 +22,17 @@ saveenv
 netboot
 ```
 `ipaddr` - адрес `wlc`; `serverip` - адрес `tftp` сервера ; `firmware_file` - имя файла на сервере ; `saveenv` - ?; `netboot` - загрузить прошивку и запустить устройство
+
+#### Change branch in ESR submodules
+switch to 1.36.x
+``` unfold
+git submodule foreach --recursive 'case $name in webeltex/backend2/web-core) git checkout esr-1.36.x ;; webeltex/frontend/malvic) git checkout esr-master ;; lint) ;; src/components/rrm/rrm-tester) ;; *) git checkout 1.36.x ;; esac'
+```
+
+Difference naming in these:
+``` unfold
+build/apps/webeltex/backend2/web-core
+build/apps/webeltex/frontend/malvic
+build/apps/webeltex/frontend/malvic/lint
+build/apps/wlc/wlc-base/src/components/rrm/rrm-tester
+````
