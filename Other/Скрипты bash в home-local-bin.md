@@ -86,9 +86,9 @@ fi
 ```
 
 Открытие `picocom` соединения
-```shell folded title="sopen.sh"
+```shell folded title="popen.sh"
 #!/bin/bash
-sudo killall picocom; sudo picocom -b 115200 /dev/ttyUSB3
+sudo killall picocom; sudo picocom -b 115200 /dev/ttyUSB$1
 ```
 
 Подключение к `techsupport` по `ssh` (пароль не дефолтный)
