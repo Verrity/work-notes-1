@@ -8,6 +8,10 @@
 #### [[SNMP-Info]]
 ---
 
+#### Зависимости ELTEX-WLC-MIB.mib
+* ELTEX-SMI-ACTUAL
+* elHardware
+* eltWlcTraps
 #### Первичная настройка
 
 можно не настраивать MIB, тогда в запросе придется указывать `-m /home/<user>/<mib_dir>/ELTEX-WLC-MIB.mib.`
@@ -19,12 +23,19 @@ snmp download-mibs
 ```
 
 Клонируйте репозиторий [snmp-mibs](https://gitlab.eltex.loc/ems-group/snmp-mibs)
-
-```shell unfold title="/etc/snmp/snmp.conf  <--- добавить /home/daniil/work/snmp-mibs/wlc к остальным директориям"
-mibs +ALL
-mibdirs +/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/home/<USER>/<SNMP_MIBS_REP_DIR>/wlc
+Скоприруйте все MIB кроме `ELTEX-WLC-MIB.mib` из `snmp-mibs/` в `snmp-mibs-storage/` с помощью скрипта
+```shell unfold
+find snmp-mibs/ -type f -name "*.mib" -exec cp {} snmp-mibs-storage/ \; && rm -f snmp-mibs-storage/ELTEX-WLC-MIB.mib
 ```
 
+В директориях `/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf` хранятся дефолтные MIB
+В директории `/home/<USER>/<SNMP_MIBS_STORAGE_DIR>` будут храниться прочие MIB
+В директории `/home/<USER>/<SNMP_MIBS_DIR>/wlc` будет храниться рабочий WLC MIB 
+```shell unfold
+mibs +ALL
+mibdirs +/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/home/daniil/work/snmp-mibs-storage:/home/daniil/work/snmp-mibs/wlc
+```
+Теперь OID будут транслироваться в имена.
 #### Как составить snmpwalk
 
 ```bash unfold title="Обычный запрос с OID именем"
@@ -47,7 +58,10 @@ snmpwalk -v 2c -c public 192.168.1.1 .1.3.6.1.4.1.35265.1.224.1.3.2.8 2>/dev/nul
    * -qv - выводить только значения
    * -n - показывать OID в числовом виде
 
-может пригодится `find snmp-mibs/ -type f -name "*.mib" -exec cp {} snmp-mibs-storage/ \;`
+#### MIB валидатор
+[MIB Validator](https://snmp.cs.utwente.nl/ietf/mibs/validate/) - выбирайте 6 уровень (максимальный). Первые 4 ошибки есть всегда.
+Можно сократить количество ошибок, если загрузить несколько MIB
+в этом валидаторе [Multiple MIB Validator](https://snmp.cs.utwente.nl/ietf/mibs/validate/upload.php)
 
 
 
