@@ -62,6 +62,11 @@ snmpwalk -v 2c -c public 192.168.1.1 .1.3.6.1.4.1.35265.1.224.1.3.2.8 2>/dev/nul
    * qv - выводить только значения
    * n - показывать OID в числовом виде
 
+**На wlc**
+```unfold
+snmp-server  
+snmp-server community public ro
+```
 #### MIB валидатор
 [MIB Validator](https://snmp.cs.utwente.nl/ietf/mibs/validate/) - выбирайте 6 уровень (максимальный). Первые 4 ошибки есть всегда.
 Можно сократить количество ошибок, если загрузить несколько MIB в этом валидаторе [Multiple MIB Validator](https://snmp.cs.utwente.nl/ietf/mibs/validate/upload.php)
