@@ -35,4 +35,13 @@ build/apps/webeltex/backend2/web-core
 build/apps/webeltex/frontend/malvic
 build/apps/webeltex/frontend/malvic/lint
 build/apps/wlc/wlc-base/src/components/rrm/rrm-tester
-````
+```
+OR 
+Переходим на нужную ветку в родительском репозитории и делаем:
+
+```bash unfold
+git submodule update --remote --recursive --checkout
+```
+- эта команда сделает checkout на ветки из файлов .gitmodules
+
+В обычном случае, если в сабмодулях установлены ветки, отличающиеся от ветки родителя, при комаде `git submodule update --remote --recursive` будет произведен `merge` веток, указанных в `.gitmodules` родительского репозитория, так как в `.gitmodules` выставлено такое поведение.
