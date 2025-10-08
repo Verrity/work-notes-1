@@ -44,3 +44,9 @@ WEP-550K
 WEP-2ac ; WEP-2ac Smart ; WOP-2ac ; WOP-2ac:rev.B ; WOP-2ac:rev.C
 ```
 
+---
+
+**esdk-ap**
+```unfold
+WEP-3ax
+```
