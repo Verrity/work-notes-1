@@ -18,6 +18,7 @@
 #snmp SNMP часть
 #radius Radius часть
 #failover Failover часть
+#esr_cluster Cluster часть
 * Подсистемы wlc
 #wlc_gre
 #wlc_sa
