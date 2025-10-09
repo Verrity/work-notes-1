@@ -23,6 +23,12 @@ sudo apt install snmp snmp-mibs-downloader
 snmp download-mibs
 ```
 
+mv snmp-mibs/eltexLtd/ELTEX-SMI-ACTUAL.mib  /usr/share/snmp/mibs/ietf/
+
+``` folded title="Deprecated Настройка MIB"
+
+```
+
 <u>Настройка MIB</u>
 Клонируйте репозиторий [snmp-mibs](https://gitlab.eltex.loc/ems-group/snmp-mibs)
 Скоприруйте все MIB кроме `ELTEX-WLC-MIB.mib` из `snmp-mibs/` в `snmp-mibs-storage/` с помощью скрипта
@@ -40,6 +46,15 @@ mibs +ALL
 mibdirs +/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/home/daniil/work/snmp-mibs-storage:/home/daniil/work/snmp-mibs/wlc
 ```
 Теперь OID будут транслироваться в имена.
+
+<u>Настройка MIB версия 2</u>
+Клонируйте репозиторий [snmp-mibs](https://gitlab.eltex.loc/ems-group/snmp-mibs)
+Скопируйте `snmp-mibs/eltexLtd/ELTEX-SMI-ACTUAL.mib` в `/usr/share/snmp/mibs/ietf/`
+**Конфиг `/etc/snmp/snmp.conf` должен выглядеть так:**
+```shell unfold
+mibs +ALL
+mibdirs +/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/home/daniil/work/snmp-mibs/wlc
+```
 #### Как составить snmpwalk
 Обычный запрос с OID именем
 ```bash unfold
