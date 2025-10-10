@@ -953,7 +953,7 @@
         "hideFenceLines": false,
         "buttons": {
           "alwaysShowButtons": false,
-          "alwaysShowCopyCodeButton": false,
+          "alwaysShowCopyCodeButton": true,
           "enableSelectCodeButton": false,
           "enableDeleteCodeButton": false,
           "enableWrapCodeButton": false
@@ -1147,7 +1147,7 @@
   "newPromptName": "",
   "alternateHighlightColorName": "",
   "languageBorderColorName": "",
-  "settingsType": "appearance",
+  "settingsType": "behavior",
   "langSpecificSettingsType": "",
   "languageSpecificLanguageName": ""
 }

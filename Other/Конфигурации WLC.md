@@ -10,7 +10,7 @@
 ### Failover (2 WLC)
 
 <u>WLC30 configs:</u>
-```cfg folded title="cfg-failover-wlc1"
+```cfg fold title="cfg-failover-wlc1"
 #!/usr/bin/clish
 #303
 #1.30.x-1.30.x.b8756a11
@@ -466,7 +466,7 @@ exit
 ip https server
 ```
 
-```cfg folded title="cfg-failover-wlc2"
+```cfg fold title="cfg-failover-wlc2"
 #!/usr/bin/clish
 #303
 #1.30.x-1.30.x.b8756a11
@@ -922,7 +922,7 @@ ip https server
 ```
 
 <u>MES2408PL config:</u>
-```cfg folded title="cfg-failover-mes"
+```cfg fold title="cfg-failover-mes"
 
 #Building configuration...
 !     
@@ -1023,7 +1023,7 @@ end
 ```
 
 <u>Netplan config:</u>
-```yaml folded title="5-my-config.yaml"
+```yaml fold title="5-my-config.yaml"
 network:
   version: 2
   renderer: NetworkManager
@@ -1057,4 +1057,413 @@ network:
 #     addresses:
 #     - "192.168.1.11/24"
 #     dhcp4: false
+```
+
+### Рабочий SSID
+```cfg fold title="cfg-wifi-connect"
+#!/usr/bin/clish
+#303
+#1.30.x-1.30.x.5a891822
+#2025-10-02
+#12:59:20
+object-group service ssh
+  port-range 22
+exit
+object-group service dhcp_server
+  port-range 67
+exit
+object-group service dhcp_client
+  port-range 68
+exit
+object-group service ntp
+  port-range 123
+exit
+object-group service dns
+  port-range 53
+exit
+object-group service netconf
+  port-range 830
+exit
+object-group service radius_auth
+  port-range 1812
+exit
+object-group service sa
+  port-range 8043-8044
+exit
+object-group service airtune
+  port-range 8099
+exit
+object-group service web
+  port-range 443
+exit
+
+syslog max-files 3
+syslog file-size 512
+syslog file tmpsys:syslog/default
+  severity info
+exit
+syslog file flash:syslog/radius_log
+  severity debug
+  match process-name radius-server
+exit
+syslog console
+  severity debug
+exit
+syslog monitor
+  severity debug
+exit
+
+logging radius
+
+radius-server local
+  nas ap
+    key ascii-text encrypted 8CB5107EA7005AFF
+    network 192.168.1.0/24
+  exit
+  nas local
+    key ascii-text encrypted 8CB5107EA7005AFF
+    network 127.0.0.1/32
+  exit
+  domain default
+  exit
+  domain wlc.root
+    user tester
+      password ascii-text encrypted 8CB5107EA7005AFF
+    exit
+  exit
+  virtual-server default
+    enable
+  exit
+  enable
+exit
+username admin
+  password encrypted $6$5MFooD1qyj3bqxQQ$SdUSp92BlefV4O6MtcEX0IAPWnjEk2jCngVrWO70LUmqeq0EuwnMdbqV1hCgB27TuvxNONLzmZp5.AgjbmgSJ1
+exit
+username techsupport
+  password encrypted $6$4Of2W/YnG2LPkQ7j$F1Xf0pFt2ex3Q5Yy6S3cZIcN/4CQZ6IF45576QeMhHfWHlBL2tRagcvjJSZPhC3H3LfBoi7FuKN1hgWzNRIVZ/
+exit
+
+radius-server host 127.0.0.1
+  key ascii-text encrypted 8CB5107EA7005AFF
+exit
+aaa radius-profile default_radius
+  radius-server host 127.0.0.1
+exit
+
+tech-support login enable
+
+boot host auto-config
+boot host auto-update
+
+vlan 3
+  force-up
+exit
+vlan 2
+exit
+
+no spanning-tree
+
+domain lookup enable
+
+security zone trusted
+exit
+security zone untrusted
+exit
+security zone users
+exit
+
+bridge 1
+  vlan 1
+  security-zone trusted
+  ip firewall disable
+  ip address 192.168.1.1/24
+  no spanning-tree
+  enable
+exit
+bridge 2
+  vlan 2
+  security-zone untrusted
+  ip firewall disable
+  ip address dhcp
+  no spanning-tree
+  enable
+exit
+bridge 3
+  vlan 3
+  mtu 1458
+  security-zone users
+  ip firewall disable
+  ip address 192.168.2.1/24
+  no spanning-tree
+  enable
+exit
+
+interface gigabitethernet 1/0/1
+  mode switchport
+exit
+interface gigabitethernet 1/0/2
+  mode switchport
+exit
+interface gigabitethernet 1/0/3
+  mode switchport
+exit
+interface gigabitethernet 1/0/4
+  mode switchport
+exit
+interface tengigabitethernet 1/0/1
+  mode switchport
+  switchport access vlan 2
+exit
+interface tengigabitethernet 1/0/2
+  mode switchport
+exit
+
+tunnel softgre 1
+  mode data
+  local address 192.168.1.1
+  default-profile
+  enable
+exit
+
+snmp-server
+snmp-server community private1 rw
+snmp-server community private rw
+snmp-server community public ro
+
+security zone-pair trusted untrusted
+  rule 1
+    action permit
+    enable
+  exit
+exit
+security zone-pair trusted trusted
+  rule 1
+    action permit
+    enable
+  exit
+exit
+security zone-pair trusted self
+  rule 10
+    action permit
+    match protocol tcp
+    match destination-port object-group ssh
+    enable
+  exit
+  rule 20
+    action permit
+    match protocol icmp
+    enable
+  exit
+  rule 30
+    action permit
+    match protocol udp
+    match source-port object-group dhcp_client
+    match destination-port object-group dhcp_server
+    enable
+  exit
+  rule 40
+    action permit
+    match protocol udp
+    match destination-port object-group ntp
+    enable
+  exit
+  rule 50
+    action permit
+    match protocol tcp
+    match destination-port object-group dns
+    enable
+  exit
+  rule 60
+    action permit
+    match protocol udp
+    match destination-port object-group dns
+    enable
+  exit
+  rule 70
+    action permit
+    match protocol tcp
+    match destination-port object-group netconf
+    enable
+  exit
+  rule 80
+    action permit
+    match protocol tcp
+    match destination-port object-group sa
+    enable
+  exit
+  rule 90
+    action permit
+    match protocol udp
+    match destination-port object-group radius_auth
+    enable
+  exit
+  rule 100
+    action permit
+    match protocol gre
+    enable
+  exit
+  rule 110
+    action permit
+    match protocol tcp
+    match destination-port object-group airtune
+    enable
+  exit
+  rule 120
+    action permit
+    match protocol tcp
+    match destination-port object-group web
+    enable
+  exit
+exit
+security zone-pair untrusted self
+  rule 1
+    action permit
+    match protocol udp
+    match source-port object-group dhcp_server
+    match destination-port object-group dhcp_client
+    enable
+  exit
+exit
+security zone-pair users self
+  rule 10
+    action permit
+    match protocol icmp
+    enable
+  exit
+  rule 20
+    action permit
+    match protocol udp
+    match source-port object-group dhcp_client
+    match destination-port object-group dhcp_server
+    enable
+  exit
+  rule 30
+    action permit
+    match protocol tcp
+    match destination-port object-group dns
+    enable
+  exit
+  rule 40
+    action permit
+    match protocol udp
+    match destination-port object-group dns
+    enable
+  exit
+exit
+security zone-pair users untrusted
+  rule 1
+    action permit
+    enable
+  exit
+exit
+
+security passwords default-expired
+
+nat source
+  ruleset factory
+    to zone untrusted
+    rule 10
+      description "replace 'source ip' by outgoing interface ip address"
+      action source-nat interface
+      enable
+    exit
+  exit
+exit
+
+ip dhcp-server
+ip dhcp-server pool ap-pool
+  network 192.168.1.0/24
+  address-range 192.168.1.2-192.168.1.254
+  default-router 192.168.1.1
+  dns-server 192.168.1.1
+  option 42 ip-address 192.168.1.1
+  vendor-specific
+    suboption 12 ascii-text "192.168.1.1"
+    suboption 15 ascii-text "https://192.168.1.1:8043"
+  exit
+exit
+ip dhcp-server pool users-pool
+  network 192.168.2.0/24
+  address-range 192.168.2.2-192.168.2.254
+  default-router 192.168.2.1
+  dns-server 192.168.2.1
+exit
+
+softgre-controller
+  nas-ip-address 127.0.0.1
+  data-tunnel configuration wlc
+  aaa radius-profile default_radius
+  keepalive-disable
+  service-vlan add 3
+  enable
+exit
+
+wlc
+  outside-address 192.168.1.1
+  service-activator
+    aps join auto
+  exit
+  airtune
+    enable
+  exit
+  ap-location default-location
+    description "default-location"
+    mode tunnel
+    ap-profile default-ap
+    airtune-profile default_airtune
+    ssid-profile default-ssid
+  exit
+  airtune-profile default_airtune
+    description "default_airtune"
+  exit
+  ssid-profile default-ssid
+    description "default-ssid"
+    ssid "LEVIN_TEST_SSID"
+    radius-profile default-radius
+    vlan-id 3
+    security-mode WPA2_1X
+    802.11kv
+    band 2g
+    band 5g
+    enable
+  exit
+  radio-2g-profile default_2g
+    description "default_2g"
+  exit
+  radio-5g-profile default_5g
+    description "default_5g"
+  exit
+  ap-profile default-ap
+    description "default-ap"
+    password ascii-text encrypted 8CB5107EA7005AFF
+    services
+      ip ssh server
+      ip http server
+    exit
+  exit
+  radius-profile default-radius
+    description "default-radius"
+    auth-address 192.168.1.1
+    auth-password ascii-text encrypted 8CB5107EA7005AFF
+    domain wlc.root
+  exit
+  wids-profile default-wids
+    description "default-wids"
+  exit
+  ip-pool default-ip-pool
+    description "default-ip-pool"
+    ap-location default-location
+  exit
+  enable
+exit
+
+ip ssh server
+
+ip tftp client timeout 45
+ntp enable
+ntp broadcast-client enable
+ntp server 192.168.1.10
+exit
+
+ip https server
 ```
