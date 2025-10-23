@@ -124,6 +124,7 @@ username techsupport
   password 1234
   do commit
   do confirm
+  mode techsupport
   password password
 exit
 tech-support login enable
