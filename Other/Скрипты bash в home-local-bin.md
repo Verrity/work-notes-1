@@ -47,6 +47,10 @@ if [ -f $fw ]; then
 fi
 ```
 
+```python title="scopy.py - умный скрипт загрузки"
+
+```
+
 Копирование конфигурации по локальному имени
 ```shell folded title="scopy.sh.once"
 #!/bin/sh
