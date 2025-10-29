@@ -2,7 +2,7 @@
 ---
 ### Теги
 
-### [[System|Назад]]
+### [[HOME|Назад]]
 ### Далее
 ####
 ---
@@ -1466,4 +1466,621 @@ ntp server 192.168.1.10
 exit
 
 ip https server
+```
+
+### Почти дефолтный конфиг `debug`
+Версия `1.30.4`
+```cfg title="wlc-30(debug)$ show debug"
+aaa
+    CONNECT:              Disabled
+    DISCONNECT:           Disabled
+    FAILED:               Disabled
+    INFO:                 Disabled
+link
+    UP:                   Enabled
+    DOWN:                 Enabled
+    CHNG:                 Enabled
+    SFP:                  Enabled
+cli
+    CMD:                  Disabled
+    SHOWTABLE:            Disabled
+    SHOWGRAPH:            Disabled
+    CRIT:                 Enabled
+copy
+    FTP:                  Disabled
+    SFTP:                 Disabled
+    SCP:                  Disabled
+    TFTP:                 Disabled
+    HTTP:                 Disabled
+    HTTPS:                Disabled
+    USB:                  Disabled
+    HDD:                  Disabled
+    MMC:                  Disabled
+    COMMON:               Disabled
+backup
+    FTP:                  Enabled
+    SFTP:                 Enabled
+    SCP:                  Enabled
+    TFTP:                 Enabled
+    COMMON:               Disabled
+syslog
+    SHMEM:                Disabled
+    CONFIG:               Disabled
+    MSG:                  Disabled
+    INFO:                 Disabled
+    ERR:                  Enabled
+env
+    FAN:                  Enabled
+    FANSPEED:             Enabled
+    PWR:                  Enabled
+    TEMP:                 Enabled
+    DBG:                  Disabled
+    MAEP:                 Disabled
+    MEMORY:               Enabled
+    CPULOAD:              Enabled
+    HDD:                  Enabled
+    ERR:                  Disabled
+snmp
+    CFG:                  Enabled
+    DATA:                 Disabled
+    FILE:                 Disabled
+    INTERNAL:             Disabled
+    IPC:                  Disabled
+    REQUEST:              Disabled
+    INFO:                 Enabled
+    DEBUG:                Disabled
+stp
+    DEBUG:                Disabled
+top
+    EXEC:                 Enabled
+    SYS:                  Enabled
+    MON:                  Enabled
+    SIGNALS:              Disabled
+    REGPROCESS:           Disabled
+    UNREGPROCESS:         Disabled
+oi
+    SOCKET:               Disabled
+    PROCESS:              Disabled
+    REFLECTION:           Disabled
+sys
+    EVENT:                Enabled
+    REBOOT:               Enabled
+ref
+    IPC:                  Disabled
+    OI:                   Enabled
+    CFG:                  Disabled
+    SEARCH:               Disabled
+    MEMORY:               Disabled
+ntpd
+    DEBUG:                Disabled
+    ERROR:                Disabled
+    INFO:                 Disabled
+    CRITICAL:             Disabled
+    PEER:                 Disabled
+cfg-mgr
+    TIME:                 Disabled
+    NEED_APPLY:           Disabled
+    APPLYING:             Disabled
+    AUTOUPDATE:           Enabled
+    AUTOCONFIG:           Enabled
+ospf
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+    AREA:                 Disabled
+    AUTH:                 Disabled
+bgp
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    AUTH:                 Disabled
+    ROUTE_SELECTION:      Disabled
+rip
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    AUTH:                 Disabled
+staticrouting
+    PROCESS:              Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+ospf6
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+    AREA:                 Disabled
+    AUTH:                 Disabled
+bgp6
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    AUTH:                 Disabled
+rip6
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    AUTH:                 Disabled
+staticrouting6
+    PROCESS:              Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+routing
+    AUTH:                 Disabled
+    KERNEL:               Enabled
+    ERR:                  Disabled
+    WARNING:              Disabled
+    DEBUG:                Disabled
+    IPC_DBG:              Disabled
+    IPC_ERR:              Disabled
+routing6
+    AUTH:                 Disabled
+    KERNEL:               Enabled
+    ERR:                  Disabled
+    WARNING:              Disabled
+    DEBUG:                Disabled
+e1d
+    DBG:                  Disabled
+    INF:                  Disabled
+    ERR:                  Disabled
+lbd
+    DBG:                  Disabled
+if-mgr
+    MAEP:                 Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+db
+    SOCKET:               Disabled
+    TRAP:                 Disabled
+    SQL:                  Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+show-json
+    ERR:                  Disabled
+pthread-pool
+    ERR:                  Disabled
+    DBG:                  Disabled
+service-mgr
+    NETWORK:              Disabled
+    SIGNALS:              Disabled
+    REGPROCESS:           Disabled
+    UNREGPROCESS:         Disabled
+    UPDCFG:               Disabled
+    GETINFO:              Disabled
+    SYS:                  Enabled
+    RESTARTPROCESS:       Disabled
+    MON:                  Disabled
+aptd
+    TUNNELS:              Enabled
+    ERROR:                Enabled
+    WARN:                 Enabled
+    INFO:                 Disabled
+    DEBUG:                Disabled
+    KA:                   Disabled
+    NETLINK:              Disabled
+libqos
+    INGRESS_POLICY:       Disabled
+    EGRESS_POLICY:        Disabled
+    INGRESS_BASIC:        Disabled
+    EGRESS_BASIC:         Disabled
+    VRFS_SERVICE:         Disabled
+    ERROR:                Enabled
+wan
+    INSTANCE:             Enabled
+    ERR:                  Disabled
+    WARN:                 Enabled
+    DBG:                  Disabled
+sw
+    ERR:                  Enabled
+    DBG:                  Disabled
+    INIT_ERR:             Enabled
+    INIT_DBG:             Disabled
+    CPSS_ERR:             Enabled
+    CPSS_DBG:             Disabled
+    MAEP_ERR:             Enabled
+    MAEP_DBG:             Disabled
+    CFGMGR_ERR:           Enabled
+    CFGMGR_DBG:           Disabled
+    THREAD_ERR:           Enabled
+    THREAD_DBG:           Disabled
+    ESS_ERR:              Enabled
+    ESS_DBG:              Disabled
+    OI_ERR:               Enabled
+    OI_DBG:               Disabled
+    IOCTL_ERR:            Enabled
+    IOCTL_DBG:            Disabled
+    EVENT_ERR:            Enabled
+    EVENT_DBG:            Disabled
+    SPC_ERR:              Enabled
+    SPC_DBG:              Disabled
+    REFLECTION_ERR:       Enabled
+    REFLECTION_DBG:       Disabled
+    LACP_ERR:             Enabled
+    LACP_DBG:             Disabled
+    LACP_MACHINE_ERR:     Enabled
+    LACP_MACHINE_DBG:     Disabled
+    LACP_PACKETS_ERR:     Enabled
+    LACP_PACKETS_DBG:     Disabled
+    NET_ERR:              Enabled
+    NET_DBG:              Disabled
+    NET_PACKETS_ERR:      Enabled
+    NET_PACKETS_DBG:      Disabled
+    TM_ERR:               Enabled
+    TM_DBG:               Disabled
+    FDB_ERR:              Enabled
+    FDB_DBG:              Disabled
+    SHOW:                 Disabled
+bras
+    ERROR:                Enabled
+    DEBUG:                Disabled
+    COA:                  Disabled
+    RADIUS:               Disabled
+    NETLINK:              Disabled
+    RADIUS_ERR:           Disabled
+    NETLINK_ERR:          Disabled
+    WARN:                 Enabled
+libtcv
+    ERR:                  Enabled
+    DBG:                  Disabled
+esr-config
+    ERR:                  Enabled
+    DBG:                  Disabled
+bfd
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    AUTH:                 Disabled
+bfd6
+    PROCESS:              Disabled
+    NEIG:                 Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    AUTH:                 Disabled
+modem
+    ERROR:                Disabled
+    DEBUG:                Disabled
+user
+    ADD:                  Disabled
+    DEL:                  Disabled
+    INFO:                 Disabled
+    ERR:                  Enabled
+time
+    INFO:                 Enabled
+lldpd
+    CRIT:                 Enabled
+    WARN:                 Enabled
+    INFO:                 Disabled
+    DBG:                  Disabled
+voice-mgr
+    EVENT:                Enabled
+    DBG:                  Disabled
+    ERR:                  Enabled
+    MAEP_DBG:             Disabled
+    MAEP_ERR:             Enabled
+dpid
+    ERR:                  Disabled
+    DBG:                  Disabled
+    WARN:                 Enabled
+    CLASSIFIER:           Disabled
+firmware
+    ERR:                  Enabled
+    INFO:                 Enabled
+    DBG:                  Disabled
+file-mgr
+    ERR:                  Enabled
+    INFO:                 Enabled
+    DBG:                  Disabled
+arp
+    PROCESS:              Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+nd
+    PROCESS:              Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+firewall
+    LOG:                  Enabled
+    DEBUG:                Disabled
+    WARN:                 Enabled
+    INFO:                 Disabled
+dhcp-proxy
+    ERR:                  Disabled
+    DBG:                  Disabled
+interfaces
+    ERR:                  Enabled
+    DBG:                  Disabled
+rexd
+    ERROR:                Enabled
+    DEBUG:                Disabled
+    THREAD_ERROR:         Enabled
+    THREAD_DEBUG:         Disabled
+    NET_ERROR:            Disabled
+    NET_DEBUG:            Disabled
+    MAEP_ERROR:           Disabled
+    MAEP_DEBUG:           Disabled
+kss-overlayd
+    ERR:                  Disabled
+    DBG:                  Disabled
+    MAEP:                 Disabled
+    KSS:                  Disabled
+    THREAD_ERR:           Disabled
+    THREAD_DBG:           Disabled
+    THREAD_MAEP:          Disabled
+    THREAD_KSS:           Disabled
+dhlinkwatch
+    ERROR:                Disabled
+    DEBUG:                Disabled
+licence
+    ERR:                  Enabled
+    DBG:                  Disabled
+    EVENT:                Enabled
+    IPC_ERR:              Enabled
+    IPC_DBG:              Disabled
+ip-sla
+    ERROR:                Disabled
+    DEBUG:                Disabled
+    NETWORK:              Disabled
+    LOSSES:               Disabled
+    JITTER:               Disabled
+    DELAY:                Disabled
+    STATUS:               Disabled
+kssd-hb
+    ERR:                  Disabled
+    DBG:                  Disabled
+    KSS:                  Disabled
+kss-login
+    ERR:                  Disabled
+    DBG:                  Disabled
+    KSS:                  Disabled
+esr-hashes
+    ERR:                  Enabled
+    DBG:                  Disabled
+radv6
+    ERR:                  Enabled
+    DBG:                  Disabled
+regexd
+    ERR:                  Disabled
+    DBG:                  Disabled
+    COMPILE:              Enabled
+ppp
+    ERROR:                Enabled
+    WARNING:              Enabled
+    NOTICE:               Disabled
+    INFO:                 Disabled
+    DBG:                  Disabled
+acl
+    INFO:                 Disabled
+nat
+    LOG:                  Enabled
+pcieboot
+    ERROR:                Enabled
+    INFO:                 Enabled
+    DBG:                  Disabled
+esrfs
+    ERR:                  Enabled
+    INFO:                 Enabled
+    DBG:                  Disabled
+storage-ips-mgr
+    UPDATER_ERR:          Enabled
+    UPDATER_DBG:          Disabled
+    WORKER_ERR:           Enabled
+    WORKER_DBG:           Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+    STATE_MACHINE:        Disabled
+    MAEP:                 Disabled
+    INFO:                 Enabled
+nhrp
+    ERROR:                Enabled
+    INFO:                 Disabled
+    DEBUG:                Disabled
+ldp
+    PROCESS:              Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    NEIG:                 Enabled
+if-mgr-ng
+    MAEP:                 Disabled
+    ERR:                  Enabled
+    NETLINK:              Disabled
+    PARSE:                Disabled
+    EXEC:                 Disabled
+    INFO:                 Disabled
+    DBG:                  Disabled
+l3vpn
+    PROCESS:              Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+isis
+    PROCESS:              Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+    ADJ:                  Disabled
+    CIRCUIT:              Disabled
+    LSP:                  Disabled
+    SNP:                  Disabled
+session-mgr
+    HANDLERS:             Disabled
+vpls
+    PROCESS:              Disabled
+    ERR:                  Disabled
+    DBG:                  Disabled
+    NEIG:                 Disabled
+pw-mgr
+    ERR:                  Disabled
+    DBG:                  Disabled
+cluster-mgr
+    INFO:                 Enabled
+    DBG:                  Disabled
+    UNIT:                 Disabled
+    UNIT_CFG:             Disabled
+    UNIT_CLEAR:           Disabled
+lb
+    DEBUG:                Disabled
+    INFO:                 Enabled
+    WARN:                 Enabled
+    ERROR:                Enabled
+    COA_MGR_DEBUG:        Disabled
+    COA_MGR_ERROR:        Enabled
+    DHCP_MGR_DEBUG:       Disabled
+    DHCP_MGR_ERROR:       Enabled
+    FWD_STREAM_MGR_DEBUG: Disabled
+    FWD_STREAM_MGR_ERROR: Enabled
+    UNIT_MGR_DEBUG:       Disabled
+    UNIT_MGR_INFO:        Enabled
+    UNIT_MGR_WARN:        Enabled
+    UNIT_MGR_ERROR:       Enabled
+    PAT_MGR_DEBUG:        Disabled
+    CLEANER_DEBUG:        Disabled
+    CLEANER_ERROR:        Enabled
+mailserver
+    ERR:                  Enabled
+    WARN:                 Disabled
+    INFO:                 Disabled
+content-filter
+    EXTRA_DEBUG:          Disabled
+    DEBUG:                Disabled
+    INFO:                 Disabled
+    ERR:                  Disabled
+cluster
+    ZTP_ERR:              Enabled
+    ZTP_WARN:             Enabled
+    ZTP_INFO:             Enabled
+    ZTP_DBG:              Disabled
+    SYNC_SYSTEM_ERR:      Enabled
+    SYNC_SYSTEM_WARN:     Enabled
+    SYNC_SYSTEM_INFO:     Enabled
+    SYNC_SYSTEM_DBG:      Disabled
+    SYNC_CONFIG_ERR:      Enabled
+    SYNC_CONFIG_WARN:     Enabled
+    SYNC_CONFIG_INFO:     Enabled
+    SYNC_CONFIG_DBG:      Disabled
+    SYNC_TIME_ERR:        Enabled
+    SYNC_TIME_WARN:       Enabled
+    SYNC_TIME_INFO:       Enabled
+    SYNC_TIME_DBG:        Disabled
+    SYNC_FIRMWARE_ERR:    Enabled
+    SYNC_FIRMWARE_WARN:   Enabled
+    SYNC_FIRMWARE_INFO:   Enabled
+    SYNC_FIRMWARE_DBG:    Disabled
+    SYNC_LICENCE_ERR:     Enabled
+    SYNC_LICENCE_WARN:    Enabled
+    SYNC_LICENCE_INFO:    Enabled
+    SYNC_LICENCE_DBG:     Disabled
+    IPC_ERR:              Enabled
+    IPC_DBG:              Disabled
+    AUTH_WARN:            Enabled
+track-mgr
+    ERR:                  Disabled
+    DEBUG:                Disabled
+    INFO:                 Disabled
+    IPC:                  Disabled
+global-event
+    ERR:                  Disabled
+    DBG:                  Disabled
+pbx
+    ERROR:                Enabled
+    DEBUG:                Disabled
+    INFO:                 Disabled
+    NOTICE:               Disabled
+    WARNING:              Disabled
+    VERBOSE:              Disabled
+    DTMF:                 Disabled
+mstpd
+    DEBUG:                Disabled
+    INFO:                 Enabled
+    ERROR:                Disabled
+wlc
+    ERROR:                Enabled
+    WARN:                 Enabled
+    AP:                   Disabled
+    AP_LIB:               Disabled
+    CORE:                 Disabled
+    EVENTS:               Disabled
+    SYS:                  Disabled
+    SYS_LIB:              Enabled
+    JOURNAL:              Disabled
+    IPC:                  Disabled
+sfp-mgr
+    MAEP:                 Disabled
+    ERR:                  Enabled
+    DBG:                  Disabled
+dhcp-server
+    ERROR:                Disabled
+    INFO:                 Disabled
+    DEBUG:                Disabled
+dhcp-failover
+    ERROR:                Disabled
+    STATE:                Enabled
+    INFO:                 Disabled
+    DEBUG:                Disabled
+firewall-failover
+    ERROR:                Enabled
+    WARNING:              Disabled
+    NOTICE:               Disabled
+    INFO:                 Disabled
+    DBG:                  Disabled
+    CT_INT:               Disabled
+    CT_KNL_EVENT:         Disabled
+    CT_EXT:               Disabled
+    EXP_INT:              Disabled
+    EXP_KNL_EVENT:        Disabled
+    EXP_EXT:              Disabled
+sync-mgr
+    ERROR:                Enabled
+    INFO:                 Enabled
+    DEBUG:                Disabled
+web
+    EMERG:                Disabled
+    ALERT:                Disabled
+    CRIT:                 Enabled
+    ERR:                  Disabled
+    WARNING:              Disabled
+    NOTICE:               Disabled
+    INFO:                 Disabled
+    DEBUG:                Disabled
+    CMD:                  Disabled
+voip-sip
+    DBG:                  Disabled
+    INF:                  Disabled
+    WARNING:              Disabled
+    ERR:                  Enabled
+    NOTICE:               Enabled
+voip-app
+    DBG:                  Disabled
+    INF:                  Disabled
+    WARNING:              Disabled
+    ERR:                  Enabled
+    NOTICE:               Enabled
+vtype-validator
+    DBG:                  Disabled
+    ERR:                  Disabled
+radius
+    DEBUG:                Enabled
+ipsec
+    default = 0
+    app     = default
+    asn     = default
+    cfg     = default
+    chd     = default
+    dmn     = default
+    enc     = default
+    esp     = default
+    ike     = default
+    imc     = default
+    imv     = default
+    job     = default
+    knl     = default
+    lib     = default
+    mgr     = default
+    net     = default
+    pts     = default
+    tls     = default
+    tnc     = default
 ```
