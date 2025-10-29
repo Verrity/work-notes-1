@@ -10,8 +10,6 @@
 - В фейловере можно настроить разные устройства, в кластере только одной модели устройства (иначе не соберётся кластер).
 
 `/mnt/config/etc/config/esr/esr_config.json`
-
-Связной с ESR - Дмитрий Коваленко
 #### Загрузить прошивку через u-boot
 Если ни одной прошивки на устройстве не осталось, и нельзя выйти из `uboot`, то вот решение
 ```u-boot folded title="Команды для загрузки прошивки через u-boot (использовать gigabitethernet 1 !!!)"
@@ -45,3 +43,9 @@ git submodule update --remote --recursive --checkout
 - эта команда сделает checkout на ветки из файлов .gitmodules
 
 В обычном случае, если в сабмодулях установлены ветки, отличающиеся от ветки родителя, при комаде `git submodule update --remote --recursive` будет произведен `merge` веток, указанных в `.gitmodules` родительского репозитория, так как в `.gitmodules` выставлено такое поведение.
+
+#### Обновить тулчейн ESR
+При переходе с esr 1.30.х на 1.36.х потребовалось обновить тулчейн, иначе сборк 
+```bash unfold
+sudo /opt/esr-ci/scripts/esr-repo-clone.sh /opt/esr-tools -c update -p tools && sudo /opt/esr-tools/install.sh
+```
