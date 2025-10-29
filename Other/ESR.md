@@ -45,7 +45,7 @@ git submodule update --remote --recursive --checkout
 В обычном случае, если в сабмодулях установлены ветки, отличающиеся от ветки родителя, при комаде `git submodule update --remote --recursive` будет произведен `merge` веток, указанных в `.gitmodules` родительского репозитория, так как в `.gitmodules` выставлено такое поведение.
 
 #### Обновить тулчейн ESR
-При переходе с esr 1.30.х на 1.36.х потребовалось обновить тулчейн, иначе сборк 
+При переходе с esr 1.30.х на 1.36.х потребовалось обновить тулчейн, иначе сборка ломалась. 
 ```bash unfold
 sudo /opt/esr-ci/scripts/esr-repo-clone.sh /opt/esr-tools -c update -p tools && sudo /opt/esr-tools/install.sh
 ```
