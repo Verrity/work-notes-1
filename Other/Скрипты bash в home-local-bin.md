@@ -158,7 +158,7 @@ def args_resolve_destination_ip(args, parser: argparse.ArgumentParser) -> IPv4Ad
 
 def download_firmware(url: str, output_path: Path) -> bool:
     """Скачивает firmware по URL."""
-    print(f"Downloading firmware ...\n", end="", flush=True)
+    print(f"Downloading firmware ...\n", end=' ', flush=True)
     
     try:
         # Используем curl с прогресс-баром
@@ -167,10 +167,10 @@ def download_firmware(url: str, output_path: Path) -> bool:
             capture_output=True,
             check=True
         )
-        print("Download completed.")
+        print("Done.")
         return True
     except subprocess.CalledProcessError as e:
-        print(f"Download failed: '{e}'.")
+        print(f"[!] Command failed: '{e}'.")
         return False
 
 def get_file_last_modified_time(path: str) -> str:
