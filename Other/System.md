@@ -11,63 +11,51 @@
 ---
 
 ### Сеть
-```yaml folded title="/etc/netplan/10-my-config.yaml"
-nnetwork:
+```yaml fold title="/etc/netplan/10-my-config.yaml"
+network:
   version: 2
   renderer: NetworkManager
   ethernets:
     # Интерфейс для корпоративной сети
     enp2s0:
       dhcp4: true
-      dhcp6: true
-      ipv6-address-generation: "stable-privacy"
-        # Интерфейс для локальной сети с устройствами. Управляется bridge "br-wlc".
+      dhcp6: true 
+    # Интерфейс для локальной сети с устройствами. Управляется bridge "br-wlc".
     enp1s0:
-      match:
-        macaddress: "8C:90:2D:FD:AB:9D"
-  bridges:
-    # Бридж на интерфейс enp1s0 для виртуальных машин и прочего
-    br-wlc:
       addresses:
-      - "192.168.1.10/24"
-      nameservers:
-        addresses:
-        - 192.168.1.1
-      dhcp4: false
-      dhcp6: true
-      ipv6-address-generation: "stable-privacy"
-      interfaces:
-      - enp1s0
-  vlans:
-    # Подключение ПК
-    br-wlc.10:
-      id: 10
-      link: br-wlc
-    # Подключение ТД
-    br-wlc.20:
-      id: 20
-      link: br-wlc
-    # Подключение пользователей ТД
-    br-wlc.30:
-      id: 30
-      link: br-wlc
-    # Синхронизация
-    br-wlc.40:
-      id: 40
-      link: br-wlc
+        - "192.168.1.111/24"
+      optional: false
+
+#    enp1s0: {}
+# bridges:
+#   # Бридж на интерфейс enp1s0 для виртуальных машин и прочего
+#   br-wlc:
+#     interfaces:
+#     - enp1s0
+#     addresses:
+#     - "192.168.1.10/24"
+#     nameservers:
+#       addresses:
+#       - 192.168.1.1
+#     dhcp4: false
+#     dhcp6: false
+# vlans:
+#   # Подключение ПК
+#   br-wlc.1:
+#     id: 1
+#     link: br-wlc
+#     addresses:
+#     - "192.168.1.11/24"
+#     dhcp4: false
 ```
 
 ```bash folded title="Настроить права доступа чтобы netplan не ругался"
 sudo chmod 600 /etc/netplan/10-my-config.yaml
 sudo chown root:root /etc/netplan/10-my-config.yaml
 ```
-C
-
-
-
 ### DHCP
 Конфиг:
-```shell folded title="/etc/dhcp/dhcpd.conf"
+```shell title="/etc/dhcp/dhcpd.conf" fold
 # dhcpd.conf
 #
 # Sample configuration file for ISC dhcpd
@@ -260,6 +248,27 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 #  }
 #}
 
+```
+
+```shell title="/etc/default/isc-dhcp-server" fold
+# Defaults for isc-dhcp-server (sourced by /etc/init.d/isc-dhcp-server)
+
+# Path to dhcpd's config file (default: /etc/dhcp/dhcpd.conf).
+#DHCPDv4_CONF=/etc/dhcp/dhcpd.conf
+#DHCPDv6_CONF=/etc/dhcp/dhcpd6.conf
+
+# Path to dhcpd's PID file (default: /var/run/dhcpd.pid).
+#DHCPDv4_PID=/var/run/dhcpd.pid
+#DHCPDv6_PID=/var/run/dhcpd6.pid
+
+# Additional options to start dhcpd with.
+#	Don't use options -cf or -pf here; use DHCPD_CONF/ DHCPD_PID instead
+#OPTIONS=""
+
+# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#	Separate multiple interfaces with spaces, e.g. "eth0 eth1".
+INTERFACESv4="enp1s0"
+INTERFACESv6=""
 ```
 
 ### TFTP
