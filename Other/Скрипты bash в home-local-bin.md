@@ -399,7 +399,17 @@ exit
 
 no ntp broadcast-client enable
 ntp enable
-ntp server 192.168.1.10
+ntp server 192.168.1.111
+exit
+
+bridge 1
+  ip firewall disable
+exit
+bridge 2
+  ip firewall disable
+exit
+bridge 3
+  ip firewall disable
 exit
 
 interface gigabitethernet 1/0/1
@@ -410,8 +420,8 @@ username techsupport
   password 1234
   do commit
   do confirm
-  mode techsupport
   password password
+  mode techsupport
 exit
 tech-support login enable
 
