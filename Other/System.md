@@ -270,6 +270,10 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 INTERFACESv4="enp1s0"
 INTERFACESv6=""
 ```
+check syntax
+```bash unfold
+sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf
+```
 
 ### TFTP
 ```shell folded title="/etc/default/tftp-hpa"
