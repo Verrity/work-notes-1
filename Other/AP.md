@@ -11,10 +11,11 @@
 Включить логи в консоли
 ```unfold
 configure
-	service-activator
-		wlc
-			debug true
-			logfile /dev/console
+service-activator
+wlc
+debug true
+logfile /dev/console
+save
 ```
 
 
