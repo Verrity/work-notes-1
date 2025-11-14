@@ -8,6 +8,15 @@
 ####
 ---
 
+Включить логи в консоли
+```unfold
+configure
+	service-activator
+		wlc
+			debug true
+			logfile /dev/console
+```
+
 
  Таблица проектов и ТД из `board-types.json`
 
