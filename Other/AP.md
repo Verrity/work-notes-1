@@ -16,6 +16,9 @@ wlc
 debug true
 logfile /dev/console
 save
+exit
+exit
+exit
 ```
 
 
