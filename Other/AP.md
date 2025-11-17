@@ -18,6 +18,7 @@ debug true
 logfile /dev/console
 server
 debug true
+logfile /dev/console
 save
 exit
 exit
