@@ -9,13 +9,17 @@
 ---
 
 Включить логи в консоли
+(server - в нем сертификаты)
 ```unfold
 configure
 service-activator
 wlc
 debug true
 logfile /dev/console
+server
+debug true
 save
+exit
 exit
 exit
 exit
