@@ -90,3 +90,7 @@ git am 0001-some-change.patch
 
 * `-p` - выводит `diff` для каждого комита
 
+#### Команды
+```bash unfold title"Посмотреть файл в другой ветке не переходя на нее"
+git show <branch>:<filepath>
+```
