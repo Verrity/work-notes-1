@@ -44,3 +44,6 @@ git submodule update --remote --recursive --checkout
 ```bash unfold
 sudo /opt/esr-ci/scripts/esr-repo-clone.sh /opt/esr-tools -c update -p tools && sudo /opt/esr-tools/install.sh
 ```
+
+#### Copy
+При выполнении команды `copy` `file-mgr` создает потоки операций, внутри которых форкаются отдельные процессы - клиенты транспортных протоколов (`TFTP`, `FTP`, `SCP`, `HTTP` и т.д.) из `busybox`, `tnftp`, `openssh`, `wget` и т.д. Все клиенты пропатчены для передачи своего `pid` и текущего прогресса операций через файл, что позволяет управлять ими и отслеживать прогресс передачи данных
