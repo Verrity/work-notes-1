@@ -10,10 +10,10 @@
 
 ### Добавление фейковых клиентов
 ```bash unfold
-wlcctl -r 'DISABLE_AP_MONITORING|68:13:e2:c2:d1:c0|true'
+wlcctl -r 'DISABLE_AP_MONITORING|68:13:e2:1f:59:80|true'
 ```
 ```bash unfold
-wlcctl -r 'ADD_FAKE_CLIENTS|68:13:e2:c2:d1:c0|1000|82:00:13:70:20:00'
+wlcctl -r 'ADD_FAKE_CLIENTS|68:13:e2:1f:59:80|1000|82:00:13:70:20:00'
 ```
 ```bash unfold
 wlcctl -r 'GET_CLIENT_MACLIST|{"client-mac":"8"}|{"limit":"128"}'
