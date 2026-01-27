@@ -86,6 +86,9 @@ git format-patch -3
 git format-patch main..feature
 # Применить патч с сохранением комитов
 git am 0001-some-change.patch
+
+# Из 3-х комитов одновременно
+git format-patch -3 --stdout > pat
 ```
 
 * `-p` - выводит `diff` для каждого комита
