@@ -78,7 +78,7 @@ git range-diff 298452e5532d8c91ff189420e5115e2b1337d9cc^..298452e5532d8c91ff1894
 # Вы вводите диапазон "first_commit last_commit" - он сравнивает
 # "first_commit_parent" с "[first_commit..last_commit]" как один диапазон.
 if [ $# -ne 4 ]; then
-    echo "Usage: $0 <1_first_commit> <1_last_commit> <2_first_commit> <2_lase_commit>"
+    echo "Usage: $0 <1_first_commit> <1_last_commit> <2_first_commit> <2_last_commit>"
     echo "Example: $0 62b8cf3 1412a30 5b5da72 c30db82"
     exit 1
 fi
