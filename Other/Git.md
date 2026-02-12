@@ -69,6 +69,54 @@ git range-diff oldbase..oldhead newbase..newhead
 git range-diff 298452e5532d8c91ff189420e5115e2b1337d9cc^..298452e5532d8c91ff189420e5115e2b1337d9cc cdf79b5b495e53e81bbed453ae44a4dfbe6bfa25^..cdf79b5b495e53e81bbed453ae44a4dfbe6bfa25
 ```
 
+```sh fold title="Скрипт git_range_diff.sh"
+#!/bin/bash
+# Скрипт похож на "git range-diff", но позволет сравнить диапазон комитов как один патч
+# c его родительским комитом в качестве диапазона с другим таким же диапазоном. Обычный
+# range-diff сравнивает диапазоны покомитно, но количество и качество комитов не всегда
+# совпадает, в таком случае вообще не понятно, что выводит range-diff.
+# Вы вводите диапазон "first_commit last_commit" - он сравнивает
+# "first_commit_parent" с "[first_commit..last_commit]" как один диапазон.
+if [ $# -ne 4 ]; then
+    echo "Usage: $0 <1_first_commit> <1_last_commit> <2_first_commit> <2_lase_commit>"
+    echo "Example: $0 62b8cf3 1412a30 5b5da72 c30db82"
+    exit 1
+fi
+# комиты
+D1_FIRST=$1
+D1_LAST=$2
+D2_FIRST=$3
+D2_LAST=$4
+# создаем и запоминаем ветки
+CURRENT_BRANCH_OR_COMMIT=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || git rev-parse HEAD)
+D1_TMP_BRANCH="tmp-range-diff-old-$$"
+D2_TMP_BRANCH="tmp-range-diff-new-$$"
+# очистка при выходе
+cleanup() {
+    git branch -D $D1_TMP_BRANCH 2>/dev/null || true
+    git branch -D $D2_TMP_BRANCH 2>/dev/null || true
+    git checkout $CURRENT_BRANCH_OR_COMMIT 2>/dev/null || true
+}
+trap cleanup EXIT
+# создаем временные ветки
+git checkout -b $D1_TMP_BRANCH $D1_LAST
+git checkout -b $D2_TMP_BRANCH $D2_LAST
+# сквошим старый набор
+git checkout $D1_TMP_BRANCH
+git reset --soft ${D1_FIRST}^
+git commit -m "SQUASHED: $D1_FIRST..$D1_LAST"
+D1_TARGET=$(git rev-parse HEAD)
+# сквошим новый набор
+git checkout $D2_TMP_BRANCH
+git reset --soft ${D2_FIRST}^
+git commit -m "SQUASHED: $D2_FIRST..$D2_LAST"
+D2_TARGET=$(git rev-parse HEAD)
+# смотрим diff
+git range-diff $D1_TARGET^..$D1_TARGET $D2_TARGET^..$D2_TARGET
+# cleanup и возврат
+cleanup
+exit 0
+```
 
 #### Патчи
 ```bash unfold title="Дифф патч"
