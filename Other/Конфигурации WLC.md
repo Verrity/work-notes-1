@@ -6,10 +6,30 @@
 ### Далее
 #### [[MES2408PL]]
 ---
+#### MES
+Изменяется сразу `running-config` 
+```unfold 
+copy running-config startup-config
+write startup-config
+
+```
+`copy running-config startup-config` - скопировать конфигурацию
+`write startup-config`
+```fold title="Дефолтная настройка vlan 1"
+interface vlan 1
+ip dhcp client vendor-specific MES2408PL
+ip address dhcp
+ipv6 enable
+
+И не vlan 1
+ip dhcp client vendor-specific MES2408PL
+```
 
 ### Failover (2 WLC)
 
 Конфигурация WLC должна быть одинаковой (`db.json` тоже получается одинаковый). Но реально может получиться разной и WLC будет работать. мы не поддреживаем этот кейс. 
+
+
 
 Настройки:
 * Для WLC в `bridge 2` лучше сменить на любой влан кроме `vlan 1`, например `vlan 4`, если надо подключить ПК (можно и к ТД его пихнуть, но это не хорошо)
@@ -17,14 +37,17 @@
 	* Нужно исключить из диапазона адреса, которые назначены на bridge и vrrp, иначе конфликты будут
 * Vlans:
 	* `vlan 1` - не используется
-	* `vlan 2` - для ПК
+	* `vlan 4` - для ПК (вообще идеально было бы `vlan 2` + настроить интерфейс на bridge, но я не хочу менять подсеть)
 	* `vlan 3` - для Клиентов
 	* `vlan 4` - для ТД
 * Интерфейсы:
 	- WLC: `trunk`, не ставить `native vlan`
+	- WLC Bridge 1: `vlan 4`
+	- WLC Bridge 2: `vlan 2` (unused)
+	- WLC Bridge 3: `vlan 3`
 	- MES-WLC: `trunk`, не ставить `native vlan`
 	- MES-AP: `general`,  `vlan add 3,4 untaged`, `pvid 4`
-	- MES-PC: `access`, `vlan bridge 2`
+	- MES-PC: `general`,  `vlan add 2,3,4 untaged`, `pvid 4`
 
 Разница между конфигами:
 
