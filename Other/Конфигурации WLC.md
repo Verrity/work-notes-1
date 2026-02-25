@@ -7,24 +7,27 @@
 #### [[MES2408PL]]
 ---
 #### MES
-Изменяется сразу `running-config` 
+Изменяется сразу `running-config` , поэтому для сохранения конфигурации нужно сделать
 ```unfold 
 copy running-config startup-config
 write startup-config
-
 ```
-`copy running-config startup-config` - скопировать конфигурацию
-`write startup-config`
 ```fold title="Дефолтная настройка vlan 1"
 interface vlan 1
 ip dhcp client vendor-specific MES2408PL
 ip address dhcp
 ipv6 enable
+no shutdown
 
 И не vlan 1
 ip dhcp client vendor-specific MES2408PL
 ```
-
+```fold title="Полезные команды"
+show mac-address-table
+show interfaces gigabitethernet 0/3
+show interfaces vlan 4
+show vlan id 4
+```
 ### Failover (2 WLC)
 
 Конфигурация WLC должна быть одинаковой (`db.json` тоже получается одинаковый). Но реально может получиться разной и WLC будет работать. мы не поддреживаем этот кейс. 
@@ -40,6 +43,8 @@ ip dhcp client vendor-specific MES2408PL
 	* `vlan 4` - для ПК (вообще идеально было бы `vlan 2` + настроить интерфейс на bridge, но я не хочу менять подсеть)
 	* `vlan 3` - для Клиентов
 	* `vlan 4` - для ТД
+	* Влану можно назначить ip на интерфейс `interface vlan 1`. Вроде `vlan 1` и так во всех интерфейсах (это не точно), возможно можно назначить адрес только ему, чтобы уметь копировать конфигурацию
+	* Все интерфейсы при создании выключены, их нужно включить `no shutdown`
 * Интерфейсы:
 	- WLC: `trunk`, не ставить `native vlan`
 	- WLC Bridge 1: `vlan 4`
@@ -68,11 +73,11 @@ ip dhcp client vendor-specific MES2408PL
 <u>WLC30 configs:</u>
 ```cfg fold title="cfg-failover-wlc1"
 #!/usr/bin/clish
-#303
-#1.30.x-1.30.x.b8756a11
-#2025-09-22
-#12:06:19
-hostname WLC-1
+#362
+#1.36.x
+#2026-02-24
+#10:09:13
+hostname WLC-1.failover
 
 object-group service ssh
   port-range 22
@@ -120,6 +125,9 @@ syslog file flash:syslog/radius_log
   severity debug
   match process-name radius-server
 exit
+syslog console
+  severity error
+exit
 
 logging radius
 
@@ -145,6 +153,11 @@ exit
 username admin
   password encrypted $6$Nyeyr/Lb9igI5Z/z$knxMNdjqKcJs4cWa671000p/tHs9GmigOVa.O4Qz4XZdqvZ0vqx4IoHaZCNz/FF0IaQo4gMOhbCfXpZSI8wgd.
 exit
+username techsupport
+  password encrypted $6$ZiQWNM.4RDyExE5Q$75/Tm5gl8h/A55uDnHwJuGVkrXp8KfF8mpv03x8xLkGzMeg8FrlPNZ7zXhumC2gWc7LdHG7yzaKEmBkM5On8X1
+  privilege 15
+  mode techsupport
+exit
 
 radius-server host 127.0.0.1
   key ascii-text encrypted 8CB5107EA7005AFF
@@ -162,6 +175,9 @@ exit
 vlan 3
   force-up
 exit
+vlan 4
+  force-up
+exit
 
 no spanning-tree
 
@@ -176,17 +192,18 @@ exit
 
 bridge 1
   description "AP pool 1"
-  vlan 1
+  vlan 4
   security-zone trusted
   ip firewall disable
   ip address 192.168.1.2/24
-  vrrp id 1
-  vrrp ip 192.168.1.1/32
-  vrrp priority 120
-  vrrp group 1
-  vrrp preempt disable
-  vrrp timers garp refresh 60
-  vrrp
+  vrrp 1
+    ip address 192.168.1.1/32
+    priority 120
+    group 1
+    preempt disable
+    timers garp refresh 60
+    enable
+  exit
   no spanning-tree
   enable
 exit
@@ -205,20 +222,22 @@ bridge 3
   security-zone users
   ip firewall disable
   ip address 192.168.2.2/24
-  vrrp id 3
-  vrrp ip 192.168.2.1/32
-  vrrp priority 120
-  vrrp group 1
-  vrrp preempt disable
-  vrrp timers garp refresh 60
-  vrrp
+  vrrp 3
+    ip address 192.168.2.1/32
+    priority 120
+    group 1
+    preempt disable
+    timers garp refresh 60
+    enable
+  exit
   no spanning-tree
   enable
 exit
 
 interface gigabitethernet 1/0/1
   mode switchport
-  switchport access vlan 2
+  switchport mode trunk
+  switchport trunk allowed vlan add 2-4
 exit
 interface gigabitethernet 1/0/2
   mode switchport
@@ -417,6 +436,7 @@ ip dhcp-server
 ip dhcp-server pool ap-pool
   network 192.168.1.0/24
   address-range 192.168.1.2-192.168.1.254
+  excluded-address-range 192.168.1.1,192.168.1.2,192.168.1.3
   default-router 192.168.1.1
   dns-server 192.168.1.1
   option 42 ip-address 192.168.1.1
@@ -428,6 +448,7 @@ exit
 ip dhcp-server pool users-pool
   network 192.168.2.0/24
   address-range 192.168.2.2-192.168.2.254
+  excluded-address-range 192.168.2.1,192.168.2.2,192.168.2.3
   default-router 192.168.2.1
   dns-server 192.168.2.1
 exit
@@ -482,6 +503,9 @@ wlc
   radio-5g-profile default_5g
     description "default_5g"
   exit
+  radio-6g-profile default_6g
+    description "default_6g"
+  exit
   ap-profile default-ap
     description "default-ap"
     password ascii-text encrypted 8CB5107EA7005AFF
@@ -507,6 +531,7 @@ wlc
 exit
 
 ip ssh server
+ip ssh dscp 32
 
 ip tftp client timeout 45
 ntp enable
@@ -524,11 +549,11 @@ ip https server
 
 ```cfg fold title="cfg-failover-wlc2"
 #!/usr/bin/clish
-#303
-#1.30.x-1.30.x.b8756a11
-#2025-09-22
-#12:06:19
-hostname WLC-2
+#362
+#1.36.x
+#2026-02-24
+#10:09:13
+hostname WLC-2.failover
 
 object-group service ssh
   port-range 22
@@ -576,6 +601,9 @@ syslog file flash:syslog/radius_log
   severity debug
   match process-name radius-server
 exit
+syslog console
+  severity error
+exit
 
 logging radius
 
@@ -601,6 +629,12 @@ exit
 username admin
   password encrypted $6$Nyeyr/Lb9igI5Z/z$knxMNdjqKcJs4cWa671000p/tHs9GmigOVa.O4Qz4XZdqvZ0vqx4IoHaZCNz/FF0IaQo4gMOhbCfXpZSI8wgd.
 exit
+username techsupport
+  password encrypted $6$ZiQWNM.4RDyExE5Q$75/Tm5gl8h/A55uDnHwJuGVkrXp8KfF8mpv03x8xLkGzMeg8FrlPNZ7zXhumC2gWc7LdHG7yzaKEmBkM5On8X1
+  privilege 15
+  mode techsupport
+exit
+
 radius-server host 127.0.0.1
   key ascii-text encrypted 8CB5107EA7005AFF
 exit
@@ -617,6 +651,9 @@ exit
 vlan 3
   force-up
 exit
+vlan 4
+  force-up
+exit
 
 no spanning-tree
 
@@ -631,17 +668,18 @@ exit
 
 bridge 1
   description "AP pool 1"
-  vlan 1
+  vlan 4
   security-zone trusted
   ip firewall disable
   ip address 192.168.1.3/24
-  vrrp id 1
-  vrrp ip 192.168.1.1/32
-  vrrp priority 110
-  vrrp group 1
-  vrrp preempt disable
-  vrrp timers garp refresh 60
-  vrrp
+  vrrp 1
+    ip address 192.168.1.1/32
+    priority 110
+    group 1
+    preempt disable
+    timers garp refresh 60
+    enable
+  exit
   no spanning-tree
   enable
 exit
@@ -660,20 +698,22 @@ bridge 3
   security-zone users
   ip firewall disable
   ip address 192.168.2.3/24
-  vrrp id 3
-  vrrp ip 192.168.2.1/32
-  vrrp priority 110
-  vrrp group 1
-  vrrp preempt disable
-  vrrp timers garp refresh 60
-  vrrp
+  vrrp 3
+    ip address 192.168.2.1/32
+    priority 110
+    group 1
+    preempt disable
+    timers garp refresh 60
+    enable
+  exit
   no spanning-tree
   enable
 exit
 
 interface gigabitethernet 1/0/1
   mode switchport
-  switchport access vlan 2
+  switchport mode trunk
+  switchport trunk allowed vlan add 2-4
 exit
 interface gigabitethernet 1/0/2
   mode switchport
@@ -872,6 +912,7 @@ ip dhcp-server
 ip dhcp-server pool ap-pool
   network 192.168.1.0/24
   address-range 192.168.1.2-192.168.1.254
+  excluded-address-range 192.168.1.1,192.168.1.2,192.168.1.3
   default-router 192.168.1.1
   dns-server 192.168.1.1
   option 42 ip-address 192.168.1.1
@@ -883,6 +924,7 @@ exit
 ip dhcp-server pool users-pool
   network 192.168.2.0/24
   address-range 192.168.2.2-192.168.2.254
+  excluded-address-range 192.168.2.1,192.168.2.2,192.168.2.3
   default-router 192.168.2.1
   dns-server 192.168.2.1
 exit
@@ -937,6 +979,9 @@ wlc
   radio-5g-profile default_5g
     description "default_5g"
   exit
+  radio-6g-profile default_6g
+    description "default_6g"
+  exit
   ap-profile default-ap
     description "default-ap"
     password ascii-text encrypted 8CB5107EA7005AFF
@@ -962,6 +1007,7 @@ wlc
 exit
 
 ip ssh server
+ip ssh dscp 32
 
 ip tftp client timeout 45
 ntp enable
@@ -979,140 +1025,114 @@ ip https server
 
 <u>MES2408PL config:</u>
 ```cfg fold title="cfg-failover-mes"
-
 #Building configuration...
-!     
 !
-interface vlan 1 
+!
 ip dhcp client vendor-specific MES2408PL
-!    
+!
 !
 interface gigabitethernet 0/1
-description "[WLC1] trunc native vlan 1"
-no shutdown    
-! 
-interface gigabitethernet 0/2
-description "[WLC2] trunc native vlan 1"
-no shutdown    
-! 
-interface gigabitethernet 0/3
-description "[AP] access vlan 1"
-no shutdown    
-! 
-interface gigabitethernet 0/4
-description "[] access vlan 1"
-no shutdown    
-! 
-interface gigabitethernet 0/5
-description "[AP] access vlan 1"
-no shutdown    
-! 
-interface gigabitethernet 0/6
-description "[] access pvid 1"
-no shutdown    
-! 
-interface gigabitethernet 0/7
-description "[AP] access pvid 20"
-no shutdown    
-! 
-interface gigabitethernet 0/8
-description "[] access vlan 1"
-no shutdown    
-! 
-interface gigabitethernet 0/9
-no shutdown    
-! 
-interface gigabitethernet 0/10
-no shutdown    
-! 
-interface vlan 1
- ip address dhcp
+description "WLC-1"
 no shutdown
-! 
-interface vlan 1 
- ipv6 enable   
 !
-! 
-vlan 1
+interface gigabitethernet 0/2
+description "WLC-2"
+no shutdown
+!
+interface gigabitethernet 0/3
+description "PC"
+no shutdown
+!
+interface gigabitethernet 0/4
+description "AP"
+no shutdown
+!
+interface gigabitethernet 0/5
+description "AP"
+no shutdown
+!
+interface gigabitethernet 0/6
+description "AP"
+no shutdown
+!
+interface gigabitethernet 0/7
+description "AP"
+no shutdown
+!
+interface gigabitethernet 0/8
+description "AP"
+no shutdown
+!
+interface gigabitethernet 0/9
+no shutdown
+!
+interface gigabitethernet 0/10
+no shutdown
+!
+interface vlan 4
+ip address  192.168.1.130 255.255.255.0
+no shutdown
+!
+interface vlan 4
+!
+!
+vlan 1-4
  vlan active
 !
 !
 interface gigabitethernet 0/1
 switchport mode trunk
-! 
+!
 interface gigabitethernet 0/2
 switchport mode trunk
-! 
+!
 interface gigabitethernet 0/3
-switchport acceptable-frame-type untaggedAndPriorityTagged
-switchport mode access
-! 
+switchport general allowed vlan add 2-4 untagged
+switchport general pvid 4
+!
 interface gigabitethernet 0/4
-switchport acceptable-frame-type untaggedAndPriorityTagged
-switchport mode access
-! 
+switchport general allowed vlan add 3-4 untagged
+switchport general pvid 4
+!
 interface gigabitethernet 0/5
-switchport acceptable-frame-type untaggedAndPriorityTagged
-switchport mode access
-! 
+switchport general allowed vlan add 3-4 untagged
+switchport general pvid 4
+!
 interface gigabitethernet 0/6
-switchport acceptable-frame-type untaggedAndPriorityTagged
-switchport mode access
-! 
+switchport general allowed vlan add 3-4 untagged
+switchport general pvid 4
+!
 interface gigabitethernet 0/7
-switchport acceptable-frame-type untaggedAndPriorityTagged
-switchport mode access
-! 
+switchport general allowed vlan add 3-4 untagged
+switchport general pvid 4
+!
 interface gigabitethernet 0/8
-switchport acceptable-frame-type untaggedAndPriorityTagged
-switchport mode access
-! 
-!                                        
+switchport general allowed vlan add 3-4 untagged
+switchport general pvid 4
+!
+!
 set ip http disable
-!  
-!    
+!
+!
 
 debug-logging flash:/mnt/
 !
-!  
+!
 end
 ```
 
 <u>Netplan config:</u>
-```yaml fold title="5-my-config.yaml"
+```yaml fold title="netplan-config.yaml"
 network:
   version: 2
   renderer: NetworkManager
   ethernets:
-    # Интерфейс для корпоративной сети
     enp2s0:
       dhcp4: true
       dhcp6: true
-      ipv6-address-generation: "stable-privacy"
-    # Интерфейс для локальной сети с устройствами. Управляется bridge "br-wlc".
     enp1s0:
-      dhcp4: false
-  bridges:
-    # Бридж на интерфейс enp1s0 для виртуальных машин и прочего
-    br-wlc:
       addresses:
-      - "192.168.1.10/24"
-      nameservers:
-        addresses:
-        - 192.168.1.1
-      dhcp4: false
-      dhcp6: true
-      ipv6-address-generation: "stable-privacy"
-      interfaces:
-      - enp1s0
-# vlans:
-#   # Подключение ПК
-#   br-wlc.1:
-#     id: 1
-#     link: br-wlc
-#     addresses:
-#     - "192.168.1.11/24"
-#     dhcp4: false
+      - "192.168.1.111/24"
 ```
 
 ### Рабочий SSID
