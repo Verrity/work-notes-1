@@ -8,8 +8,12 @@
 Полная пересборка репозитория 1 (не чекаутится на все ветки подряд)
 1. `cd <path>/esr-base`
 2. `./prepare_working_copy.sh --board wlc30 --update-submodules`
-3. `Выставить нужные ветки`
-4. `make unconfig; yes | make clean-all; make config-wlc30; make all`
+3. Выставить нужные ветки
+4. Собрать прошивку двумя путями
+	1. Пересобрать `apps` и прошивку
+			`make apps-all && make firmware`
+	2. Пересобрать полностью
+			`make unconfig; yes | make clean-all; make config-wlc30; make all`
 
 Полная пересборка репозитория 2
 	1. `cd <path>/esr-base/build/apps/wlc/wlc-base/Documentation`
