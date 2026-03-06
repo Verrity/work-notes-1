@@ -12,6 +12,13 @@
 copy running-config startup-config
 write startup-config
 ```
+Для восстановления конфиги заводской
+```unfold
+delete startup-config
+reload
+```
+
+
 ```fold title="Дефолтная настройка vlan 1"
 interface vlan 1
 ip dhcp client vendor-specific MES2408PL
