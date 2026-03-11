@@ -17,7 +17,17 @@ write startup-config
 delete startup-config
 reload
 ```
-
+Как отключить порт не отключая PoE
+```unfold
+console(config)# mac access-list extended BLOCK
+console(config)# interface gigabitethernet 0/6
+console(config-if)# mac access-group 1 in
+```
+Как отключить PoE
+```unfold
+console(config)# interface gigabitethernet 0/6
+console(config-if)# shutdown
+```
 
 ```fold title="Дефолтная настройка vlan 1"
 interface vlan 1
