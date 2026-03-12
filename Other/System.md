@@ -64,6 +64,9 @@ sudo netplan apply
 sudo chmod 600 /etc/netplan/10-my-config.yaml
 sudo chown root:root /etc/netplan/10-my-config.yaml
 ```
+```fold title="Создание bridge в ubuntu через NetworkManager"
+nm-connection-editor
+```
 ### DHCP
 Конфиг:
 ```shell title="/etc/dhcp/dhcpd.conf" fold
