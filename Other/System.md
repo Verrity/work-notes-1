@@ -50,6 +50,16 @@ network:
 #     dhcp4: false
 ```
 
+```bash fold title="NetworkManager commands"
+# посмотреть какие устройства под его управлением
+nmcli dev status
+# удалить подключение, чтобы управлять самостоятельно
+sudo nmcli connection delete netplan-enp1s0
+sudo nmcli connection delete br-wlc
+# применить netplan
+sudo netplan apply 
+```
+
 ```bash folded title="Настроить права доступа чтобы netplan не ругался"
 sudo chmod 600 /etc/netplan/10-my-config.yaml
 sudo chown root:root /etc/netplan/10-my-config.yaml
