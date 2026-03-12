@@ -323,6 +323,23 @@ fi
 ```
 
 ### VM запустить из командной строки
+```fold title="НАстройка VM"
+1. На ПК бридж на интерфейс
+2. На VM
+   2.1. netplan (Не ip бриджа, просто рядом с ним)
+		network:
+		  version: 2
+		  ethernets:
+		    enp1s0:
+		      dhcp4: true
+		    enp7s0:
+		      addresses:
+		      - "192.168.1.113/24"
+		      dhcp4: false
+		      dhcp6: false
+	2.2. Hardware
+		2.2.1. Virtual network 'internet': NAT to enp2s0 (virtio) ||| Bridge device "<bridge-name>" (virtio)
+```
 ```bash folded title="Запустить виртуальную машину"
 virsh --connect qemu:///system start "ubuntu-22-04-lts-server"
 ```
@@ -331,7 +348,7 @@ virt-manager --connect qemu:///system --show-domain-console "ubuntu-22-04-lts-se
 ```
 `login:` `user`
 `password:` `user`
-`ip`: `192.168.1.112` (`br-wlc` )
+`ip`: `192.168.1.112` (`br-wlc` ip address)
 #### NTP server
 [Инструкция по установке](https://www.dmosk.ru/miniinstruktions.php?mini=ntp-server-ubuntu)
 
