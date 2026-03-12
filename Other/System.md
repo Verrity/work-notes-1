@@ -359,6 +359,20 @@ virsh --connect qemu:///system start "ubuntu-22-04-lts-server"
 ```bash folded title="Запустить UI приложение"
 virt-manager --connect qemu:///system --show-domain-console "ubuntu-22-04-lts-server"
 ```
+```unfold title="Перегенерировать интерфейсы эмелятора"
+sudo virsh net-destroy default 2>/dev/null
+sudo virsh net-undefine default
+sudo virsh net-define /usr/share/libvirt/networks/default.xml
+sudo virsh net-start default
+sudo virsh net-autostart default
+
+sudo virsh net-list --all
+
+sudo virsh net-start virbr1
+sudo virsh net-autostart virbr1
+
+
+```
 `login:` `user`
 `password:` `user`
 `ip`: `192.168.1.112` (`br-wlc` ip address)
