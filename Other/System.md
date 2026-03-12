@@ -331,7 +331,7 @@ virt-manager --connect qemu:///system --show-domain-console "ubuntu-22-04-lts-se
 ```
 `login:` `user`
 `password:` `user`
-`ip`: `192.168.1.11`
+`ip`: `192.168.1.112` (`br-wlc` )
 #### NTP server
 [Инструкция по установке](https://www.dmosk.ru/miniinstruktions.php?mini=ntp-server-ubuntu)
 
