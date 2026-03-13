@@ -155,83 +155,98 @@ qemu-system-x86_64 \
 ```shell fold title="Скрипт для запуска"
 #!/bin/bash
 
-# Напоминалка о команде установки
-# qemu-system-x86_64 \
-# -enable-kvm \
-# -cpu host \
-# -m 4096 \
-# -smp 2 \
-# -drive file=/home/daniil/vm/disks/ubuntu-disk.qcow2,format=qcow2 \
-# -cdrom /home/daniil/vm/images/ubuntu-22.04.5-live-server-amd64.iso \
-# -netdev bridge,id=net0,br=br-local \
-# -device virtio-net-pci,netdev=net0,mac=52:54:00:12:34:01 \
-# -netdev bridge,id=net1,br=br-wan \
-# -device virtio-net-pci,netdev=net1,mac=52:54:00:12:34:02 \
-# -display gtk \
-# -vga virtio
-
 # Значения по умолчанию
-DEFAULT_MEM_GB=4
-DEFAULT_CORES=2
+DEFAULT_MEM_GB=12
+DEFAULT_CORES=4
+DEFAULT_GRAPHIC="yes"
+DEFAULT_QEMU_PORT=3100
 
-# Пути и MAC-адреса (при необходимости измените)
+# Пути и MAC-адреса
 DISK_PATH="/home/daniil/vm/disks/ubuntu-disk.qcow2"
 MAC1="52:54:00:12:34:01"
 MAC2="52:54:00:12:34:02"
 
+# Функция отображения справки
+show_help() {
+    echo "Использование: $0 [ОПЦИИ]"
+    echo "Запуск виртуальной машины QEMU/KVM с двумя сетевыми мостами."
+    echo ""
+    echo "ОПЦИИ:"
+    echo "  -m <ГБ>       Оперативная память в гигабайтах (по умолчанию: $DEFAULT_MEM_GB), с.м. 'free -h'"
+    echo "  -c <число>    Количество ядер CPU (по умолчанию: $DEFAULT_CORES), с.м. 'lscpu'"
+    echo "  -g <yes|no>   Режим отображения: yes — графическое окно, no — текстовая консоль (по умолчанию: $DEFAULT_GRAPHIC)"
+    echo "  -h, --help    Показать эту справку"
+    echo "   Порт для консоли QEMU по умолчанию: $DEFAULT_QEMU_PORT"
+    echo "   Пример:  $0 -m 8 -c 2 -g no     # 8 ГБ, 2 ядра, текстовая консоль"
+    echo ""
+    echo "MAC-адреса:"
+    echo "  Локальная сеть (br-local): $MAC1"
+    echo "  Интернет (br-wan):         $MAC2"
+    echo "Диск: $DISK_PATH"
+}
+
 # Обработка аргументов
 MEM_GB=$DEFAULT_MEM_GB
 CORES=$DEFAULT_CORES
+GRAPHIC=$DEFAULT_GRAPHIC
 
-while getopts "m:c:h" opt; do
-	case "$opt" in
-		m) MEM_GB=$OPTARG ;;
-		c) CORES=$OPTARG ;;
-		h)
-			echo "Использование: $0 [-m память_в_ГБ] [-c количество_ядер]"
-			exit 0
-			;;
-		*)
-			echo "Неверный аргумент. Используйте -h для справки."
-			exit 1
-			;;
-	esac
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -m) MEM_GB="$2"; shift 2 ;;
+        -c) CORES="$2"; shift 2 ;;
+        -g) GRAPHIC="$2"; shift 2 ;;
+        -h|--help) show_help; exit 0 ;;
+        *) echo "Неизвестная опция: $1"; show_help; exit 1 ;;
+    esac
 done
 
-# Проверка корректности аргументов
+# Проверка значений
 if ! [[ "$MEM_GB" =~ ^[0-9]+$ ]] || [ "$MEM_GB" -le 0 ]; then
-	echo "Ошибка: память должна быть положительным целым числом (в ГБ)."
-	exit 1
+    echo "ОШИБКА: память должна быть положительным целым числом (в ГБ)."
+    show_help
+    exit 1
 fi
-
 if ! [[ "$CORES" =~ ^[0-9]+$ ]] || [ "$CORES" -le 0 ]; then
-	echo "Ошибка: количество ядер должно быть положительным целым числом."
-	exit 1
+    echo "ОШИБКА: количество ядер должно быть положительным целым числом."
+    show_help
+    exit 1
+fi
+if [[ "$GRAPHIC" != "yes" && "$GRAPHIC" != "no" ]]; then
+    echo "ОШИБКА: параметр -g должен быть 'yes' или 'no'."
+    show_help
+    exit 1
 fi
 
-# Перевод гигабайт в мегабайты для QEMU
 MEM_MB=$((MEM_GB * 1024))
 
-# Проверка существования файла диска
 if [ ! -f "$DISK_PATH" ]; then
-	echo "Ошибка: файл диска $DISK_PATH не найден."
-	exit 1
+    echo "ОШИБКА: файл диска $DISK_PATH не найден."
+    exit 1
 fi
 
-# Запуск виртуальной машины
-echo "Запуск ВМ с памятью ${MEM_GB}G и ${CORES} ядрами..."
+# Выбор режима отображения
+if [ "$GRAPHIC" = "yes" ]; then
+    DISPLAY_OPTS="-display gtk -vga virtio"
+else
+    DISPLAY_OPTS="-nographic -serial mon:stdio"
+fi
+
+# Всегда открываем монитор через TCP сокет для доступа по SSH
+MONITOR_OPTS="-monitor tcp:127.0.0.1:$DEFAULT_QEMU_PORT,server,nowait"
+
+echo "Запуск ВМ с памятью ${MEM_GB}G, ${CORES} ядер, режим: $MODE_STR"
 qemu-system-x86_64 \
-	-enable-kvm \
-	-cpu host \
-	-m "$MEM_MB" \
-	-smp "$CORES" \
-	-drive file="$DISK_PATH",format=qcow2 \
-	-netdev bridge,id=net0,br=br-local \
-	-device virtio-net-pci,netdev=net0,mac="$MAC1" \
-	-netdev bridge,id=net1,br=br-wan \
-	-device virtio-net-pci,netdev=net1,mac="$MAC2" \
-	-display gtk \
-	-vga virtio
+    -enable-kvm \
+    -cpu host \
+    -m "$MEM_MB" \
+    -smp "$CORES" \
+    -drive file="$DISK_PATH",format=qcow2 \
+    -netdev bridge,id=net0,br=br-local \
+    -device virtio-net-pci,netdev=net0,mac="$MAC1" \
+    -netdev bridge,id=net1,br=br-wan \
+    -device virtio-net-pci,netdev=net1,mac="$MAC2" \
+    $DISPLAY_OPTS \
+    $MONITOR_OPTS
 ```
 Если вы хотите запускать ВМ без графического интерфейса (например, по SSH), замените -`display gtk` на `-nographic` и добавьте `-serial mon:stdio`. Для подключения к консоли используйте `virsh` или `ssh` после настройки сети.
 
@@ -247,7 +262,7 @@ sudo arp-scan --interface=br-local
 В консоли QEMU:
 Создайте снимок
 ```bash unfold
-(qemu) savevm <snapshot_name>
+(qemu) savevm <имя_снимка>
 ```
 Посмотреть все снимки
 ```bash unfold
@@ -257,16 +272,19 @@ sudo arp-scan --interface=br-local
 ```bash unfold
 (qemu) loadvm <имя_снимка>
 ```
-
+Удалить снимок
+```bash unfold
+(qemu) delvm <имя_снимка>
+```
 При восстановлении все несохранённые данные, созданные после снимка, будут потеряны.
 
 ***Как войти в консоль QEMU:***
 *  в графическом режиме: войти`Ctrl + Alt + 2`, выйти -  `Ctrl + Alt + 1`.
 * через ssh:
-1. `-monitor tcp:127.0.0.1:3100,server,nowait`
-2. Подключиться к хосту по ssh
-3. Выполнить `telnet localhost 3100`
+	1. Запустить машину с пробросом TCP порта:`-monitor tcp:127.0.0.1:3100,server,nowait`
+	2. Подключиться к хосту по ssh
+	3. Выполнить `telnet localhost 3100` (или `nc localhost 3100`)
 
-Запустить машину с пробросом TCP порта
+
 
 

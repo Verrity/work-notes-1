@@ -14,45 +14,31 @@
 ---
 
 ### Сеть
-```yaml fold title="/etc/netplan/10-my-config.yaml"
+```yaml fold title="/etc/netplan/10-my-config.yaml (NetworkManager отключен, использую systemd)"
 network:
   version: 2
-  renderer: NetworkManager
+  renderer: networkd
   ethernets:
-    # Интерфейс для корпоративной сети
-    enp2s0:
-      dhcp4: true
-      dhcp6: true 
-    # Интерфейс для локальной сети с устройствами. Управляется bridge "br-wlc".
     enp1s0:
+      dhcp4: false
+      dhcp6: false
+    enp2s0:
+      dhcp4: false
+      dhcp6: false
+  bridges:
+    br-local:
       addresses:
-        - "192.168.1.111/24"
-      optional: false
-
-#    enp1s0: {}
-# bridges:
-#   # Бридж на интерфейс enp1s0 для виртуальных машин и прочего
-#   br-wlc:
-#     interfaces:
-#     - enp1s0
-#     addresses:
-#     - "192.168.1.10/24"
-#     nameservers:
-#       addresses:
-#       - 192.168.1.1
-#     dhcp4: false
-#     dhcp6: false
-# vlans:
-#   # Подключение ПК
-#   br-wlc.1:
-#     id: 1
-#     link: br-wlc
-#     addresses:
-#     - "192.168.1.11/24"
-#     dhcp4: false
+      - "192.168.1.111/24"
+      interfaces:
+      - enp1s0
+    br-wan:
+      dhcp4: true
+      dhcp6: true
+      interfaces:
+      - enp2s0
 ```
 
-```bash fold title="NetworkManager commands"
+```bash fold title="(DEPRECATED) NetworkManager commands"
 # посмотреть какие устройства под его управлением
 nmcli dev status
 # удалить подключение, чтобы управлять самостоятельно
@@ -66,7 +52,7 @@ sudo netplan apply
 sudo chmod 600 /etc/netplan/10-my-config.yaml
 sudo chown root:root /etc/netplan/10-my-config.yaml
 ```
-```fold title="Создание bridge в ubuntu через NetworkManager"
+```bash fold title="(DEPRECATED) Создание bridge в ubuntu через NetworkManager"
 nm-connection-editor
 ```
 ### DHCP
