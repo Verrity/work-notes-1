@@ -394,12 +394,12 @@ confirm
 config
 
 username admin
-  password admin 
+  password admin
 exit
 
 no ntp broadcast-client enable
 ntp enable
-ntp server 192.168.1.111
+  ntp server 192.168.1.111
 exit
 
 bridge 1
@@ -428,6 +428,11 @@ tech-support login enable
 syslog console
   severity error
 exit
+syslog file tmpsys:syslog/default
+  severity debug
+exit
+
+ip http server
 
 wlc
   ap-profile default-ap
@@ -441,6 +446,7 @@ exit
 exit
 commit
 confirm
+
 " | xclip -selection clipboard
 ```
 
