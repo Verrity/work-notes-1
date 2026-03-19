@@ -13,6 +13,7 @@
 
 ```bash unfold
 find . -type f -exec echo "======================== {} ========================" \; -exec cat {} \;
+sudo chown -R $(whoami) groups
 ```
 
 Теги:
