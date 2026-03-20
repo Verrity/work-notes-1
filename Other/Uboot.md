@@ -10,7 +10,7 @@
 Если ни одной прошивки на устройстве не осталось, и нельзя выйти из `uboot`, то вот решение
 ```u-boot unfold
 ipaddr 192.168.1.1
-serverip 192.168.1.10
+serverip 192.168.1.111
 firmware_file wlc30.firmware
 saveenv
 netboot
