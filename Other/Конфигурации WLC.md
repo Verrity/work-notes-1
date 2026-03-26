@@ -7,6 +7,10 @@
 #### [[MES2408PL]]
 ---
 #### MES
+Скопировать конфигурацию
+```unfold
+copy running-config tftp://192.168.1.111/test
+```
 Изменяется сразу `running-config` , поэтому для сохранения конфигурации нужно сделать
 ```unfold 
 copy running-config startup-config
@@ -19,11 +23,18 @@ reload
 ```
 Как отключить порт не отключая PoE
 ```unfold
+mac access-list extended 1
+deny any any
+
 console(config)# mac access-list extended BLOCK
 console(config)# interface gigabitethernet 0/6
 console(config-if)# mac access-group 1 in
 ```
 Как отключить PoE
+```unfold
+console(config-if)# power inline never
+```
+* или возможно (не всегда отключает)
 ```unfold
 console(config)# interface gigabitethernet 0/6
 console(config-if)# shutdown
@@ -1041,6 +1052,72 @@ ip https server
 ```
 
 <u>MES2408PL config:</u>
+```cfg title="default config with port descriptions"
+#Building configuration...
+!
+!
+interface vlan 1
+ip dhcp client vendor-specific MES2408PL
+!
+!
+mac access-list extended 1
+deny any any
+!
+!
+interface gigabitethernet 0/1
+description "WLC-1 68:13:E2:7E:82:46"
+no shutdown
+!
+interface gigabitethernet 0/2
+description "WLC-2 90:54:B7:3B:A1:40"
+no shutdown
+!
+interface gigabitethernet 0/3
+description "PC 8c:90:2d:fd:ab:9d"
+no shutdown
+!
+interface gigabitethernet 0/4
+no shutdown
+!
+interface gigabitethernet 0/5
+description "WEP-3ax 68:13:e2:1f:59:80"
+no shutdown
+!
+interface gigabitethernet 0/6
+description "WEP-30L 90:54:b7:c1:1f:30"
+no shutdown
+!
+interface gigabitethernet 0/7
+description "WEP-2ac e4:5a:d4:f7:cf:a0"
+no shutdown
+!
+interface gigabitethernet 0/8
+description "WEP-1L e8:28:c1:e1:10:d0"
+no shutdown
+!
+interface gigabitethernet 0/9
+no shutdown
+!
+interface gigabitethernet 0/10
+no shutdown
+!
+interface vlan 1
+ ip address dhcp
+no shutdown
+!
+interface vlan 1
+ ipv6 enable
+!
+!
+vlan 1
+ vlan active
+!
+!
+set ip http disable
+!
+!
+end
+```
 ```cfg fold title="cfg-failover-mes"
 #Building configuration...
 !
