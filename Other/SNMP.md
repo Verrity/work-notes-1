@@ -86,8 +86,19 @@ snmp-server community public ro
 [MIB Validator](https://snmp.cs.utwente.nl/ietf/mibs/validate/) - выбирайте 6 уровень (максимальный). Первые 4 ошибки есть всегда.
 Можно сократить количество ошибок, если загрузить несколько MIB в этом валидаторе [Multiple MIB Validator](https://snmp.cs.utwente.nl/ietf/mibs/validate/upload.php)
 
+`smilint` (`sudo apt install smitools`)
 
+`smilint -i namelength-32 ./YOUR-CUSTOM-MIB.mib` - проверка с игнорированием 
+`smilint -p SNMPv2-SMI -p SNMPv2-TC -p SNMPv2-CONF -i namelength-32 ./YOUR-MIB.mib` - с зависимостями
 
+Флаги:
+* `-i 6` самый строгий
+* `-r` будет ругаться на зависимости
+
+Итого команда для обычной валидации:
+```bash unfold
+smilint -l 6 -p SNMPv2-SMI -p SNMPv2-TC -p SNMPv2-CONF ./ELTEX-WLC-MIB.mib
+```
 
 
 
