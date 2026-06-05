@@ -15,3 +15,5 @@
 `WLC_STATE_DIR` (`/mnt/data/wlc`) - создаётся сервисом `wlc` 
 `WLC_DATA_STORAGE_PATH` (`/mnt/data/wlc`) - создаётся в `init.d` скрипте  
 `WLC_AP_FIRMWARE_PATH` (`ESR_AP_FIRMWARES_DIRECTORY`) (`/mnt/data/wlc/ap_firmwares`) - создаётся в `file-mgr`
+
+`sync cluster system force` - она синхронизирует все компоненты из раздела `sh cluster sync status`
