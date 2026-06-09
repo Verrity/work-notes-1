@@ -9,7 +9,7 @@
 
 
 ```cfg title="WLC"
- #!/usr/bin/clish
+#!/usr/bin/clish
 #390
 #1.39.x
 #2026-06-04
@@ -441,18 +441,21 @@ wlc
   exit
   radio-2g-profile default_2g
     description "default_2g"
-    tx-power minimal
-    tx-power-max minimal
+    tx-power maximal
+    tx-power-max maximal
+    tx-power-min minimal
   exit
   radio-5g-profile default_5g
     description "default_5g"
-    tx-power minimal
-    tx-power-max minimal
+    tx-power maximal
+    tx-power-max maximal
+    tx-power-min minimal
   exit
   radio-6g-profile default_6g
     description "default_6g"
-    tx-power minimal
-    tx-power-max minimal
+    tx-power maximal
+    tx-power-max maximal
+    tx-power-min minimal
   exit
   ap-profile default-ap
     description "default-ap"
