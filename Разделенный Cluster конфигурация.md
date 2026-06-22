@@ -105,19 +105,19 @@ aaa radius-profile default_radius
   radius-server host 127.0.0.1
 exit
 
-vlan 1000
+vlan 100
   force-up
 exit
-vlan 2000
+vlan 200
   force-up
 exit
-vlan 3001
+vlan 300
   force-up
 exit
-vlan 3002
+vlan 400
   force-up
 exit
-vlan 4000
+vlan 500
   force-up
 exit
 
@@ -134,7 +134,7 @@ exit
 
 bridge 1
   description "Untagged"
-  vlan 1000
+  vlan 100
   ip firewall disable
   ip address 192.168.1.11/24 unit 1
   ip address 192.168.1.12/24 unit 2
@@ -148,13 +148,14 @@ bridge 1
 exit
 bridge 2
   description "SYNC"
-  vlan 2000
+  vlan 200
   ip firewall disable
   ip address 192.168.2.11/24 unit 1
   ip address 192.168.2.12/24 unit 2
   vrrp 2
     ip address 192.168.2.1/24
     priority 120 unit 1
+    priority 110 unit 2
     group 1
     enable
   exit
@@ -162,13 +163,14 @@ bridge 2
 exit
 bridge 3
   description "AP's 1"
-  vlan 3001
+  vlan 300
   ip firewall disable
   ip address 192.168.3.11/24 unit 1
   ip address 192.168.3.12/24 unit 2
   vrrp 3
     ip address 192.168.3.1/24
     priority 120 unit 1
+    priority 110 unit 2
     group 1
     enable
   exit
@@ -176,13 +178,14 @@ bridge 3
 exit
 bridge 4
   description "AP's 2"
-  vlan 3002
+  vlan 400
   ip firewall disable
   ip address 192.168.4.11/24 unit 1
   ip address 192.168.4.12/24 unit 2
   vrrp 4
     ip address 192.168.4.1/24
     priority 120 unit 1
+    priority 110 unit 2
     group 1
     enable
   exit
@@ -190,13 +193,14 @@ bridge 4
 exit
 bridge 5
   description "Clients"
-  vlan 4000
+  vlan 500
   ip firewall disable
   ip address 192.168.5.11/24 unit 1
   ip address 192.168.5.12/24 unit 2
   vrrp 5
     ip address 192.168.5.1/24
     priority 120 unit 1
+    priority 110 unit 2
     group 1
     enable
   exit
@@ -207,25 +211,25 @@ interface gigabitethernet 1/0/1
   description "All data"
   mode switchport
   switchport mode trunk
-  switchport trunk allowed vlan add 1000,3001,4000
+  switchport trunk allowed vlan add 100,300,500
 exit
 interface gigabitethernet 1/0/2
   description "Sync"
   mode switchport
   switchport mode trunk
-  switchport trunk allowed vlan add 2000,3002
+  switchport trunk allowed vlan add 200,400
 exit
 interface gigabitethernet 2/0/1
   description "All data"
   mode switchport
   switchport mode trunk
-  switchport trunk allowed vlan add 1000,3001,4000
+  switchport trunk allowed vlan add 100,300,500
 exit
 interface gigabitethernet 2/0/2
   description "Sync"
   mode switchport
   switchport mode trunk
-  switchport trunk allowed vlan add 2000,3001
+  switchport trunk allowed vlan add 200,300
 exit
 
 tunnel softgre 1
@@ -370,9 +374,9 @@ nat source
 exit
 
 ip dhcp-server
-ip dhcp-server pool ap-vlan-3001-pool
+ip dhcp-server pool ap-vlan-300-pool
   network 192.168.3.0/24
-  address-range 192.168.3.20-192.168.3.254
+  address-range 192.168.3.50-192.168.3.250
   default-router 192.168.3.1
   dns-server 192.168.3.1
   option 42 ip-address 192.168.3.1
@@ -383,13 +387,13 @@ ip dhcp-server pool ap-vlan-3001-pool
 exit
 ip dhcp-server pool users-pool
   network 192.168.5.0/24
-  address-range 192.168.5.20-192.168.5.254
+  address-range 192.168.5.50-192.168.5.250
   default-router 192.168.5.1
   dns-server 192.168.5.1
 exit
-ip dhcp-server pool ap-vlan-3002-pool
+ip dhcp-server pool ap-vlan-400-pool
   network 192.168.4.0/24
-  address-range 192.168.4.20-192.168.4.254
+  address-range 192.168.4.50-192.168.4.250
   default-router 192.168.4.1
   dns-server 192.168.4.1
   option 42 ip-address 192.168.4.1
@@ -404,7 +408,7 @@ softgre-controller
   data-tunnel configuration wlc
   aaa radius-profile default_radius
   keepalive-disable
-  service-vlan add 4000
+  service-vlan add 500
   enable
 exit
 
@@ -486,7 +490,7 @@ ip ssh server
 
 ip tftp client timeout 45
 ntp enable
-ntp server 192.168.1.111
+ntp server 192.168.1.20
 exit
 
 ip http server
@@ -504,7 +508,7 @@ no logging console
 !
 no spanning-tree
 !
-vlan 1000,2000,3001-3002,4000
+vlan 100,200,300-400,500
   vlan active
 !
 username guest password encrypted P6Vt3vbV+ULZ4bn2O+qpew== privilege 1
@@ -515,59 +519,57 @@ mac access-list extended 1
 interface vlan 1
   no ip address
 !
-interface vlan 1000
-  ip address 192.168.1.250 255.255.255.0
+interface vlan 100
+  ip address 192.168.1.30 255.255.255.0
 !
-interface vlan 3001
-  ip address 192.168.3.250 255.255.255.0
+interface vlan 300
+  ip address 192.168.3.30 255.255.255.0
 !
-interface vlan 3002
-  ip address 192.168.4.250 255.255.255.0
+interface vlan 400
+  ip address 192.168.4.30 255.255.255.0
 !
-interface vlan 4000
-  ip address 192.168.5.250 255.255.255.0
+interface vlan 500
+  ip address 192.168.5.30 255.255.255.0
 !
 interface gigabitethernet 1/0/1
   description "PC"
-  switchport mode access
-  switchport access vlan 1000
+  switchport general allowed vlan add 100,200,300,400,500
 !
 interface gigabitethernet 1/0/2
   description "WLC-1 68:13:E2:7E:82:46 Data"
-  switchport general allowed vlan add 1000,3001
-  switchport general pvid 1000
+  switchport general allowed vlan add 100,300
+  switchport general pvid 100
 !
 interface gigabitethernet 1/0/3
   description "WLC-2 90:54:B7:3B:A1:40 Data"
-  switchport general allowed vlan add 1000,3002
-  switchport general pvid 1000
+  switchport general allowed vlan add 100,400
+  switchport general pvid 100
 !
 interface gigabitethernet 1/0/4
-  description "WLC-1 68:13:E2:7E:82:46 Sync"
-  switchport general allowed vlan add 2000,3002
+  description "WLC-1 68:13:E2:7E:82:46 Sync + Dhcp"
+  switchport general allowed vlan add 200,400
 !
 interface gigabitethernet 1/0/5
-  description "WLC-2 90:54:B7:3B:A1:40 Sync"
-  switchport general allowed vlan add 2000,3001
+  description "WLC-2 90:54:B7:3B:A1:40 Sync + Dhcp"
+  switchport general allowed vlan add 200,300
 !
 interface gigabitethernet 1/0/6
   description "WEP-30L 90:54:b7:c1:1f:30"
   switchport mode access
-  switchport access vlan 3001
+  switchport access vlan 300
 !
 interface gigabitethernet 1/0/7
   description "WEP-3ax 68:13:e2:1f:59:80"
   switchport mode access
-  switchport access vlan 3002
+  switchport access vlan 400
 !
 interface gigabitethernet 1/0/8
   description "WEP-2ac e4:5a:d4:f7:cf:a0"
   switchport mode access
-  switchport access vlan 3002
+  switchport access vlan 400
 !
 set ip http disable
 !
 end
-
 ```
 
