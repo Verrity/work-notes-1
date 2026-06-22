@@ -12,8 +12,8 @@
 #!/usr/bin/clish
 #390
 #1.39.x
-#2026-06-04
-#16:52:56
+#2026-06-22
+#08:46:18
 cluster
   cluster-interface bridge 2
   unit 1
@@ -75,15 +75,24 @@ exit
 logging radius
 
 radius-server local
-  nas ap
+  nas ap1
     key ascii-text encrypted 8CB5107EA7005AFF
-    network 192.168.1.0/24
+    network 192.168.3.0/24
+  exit
+  nas ap2
+    key ascii-text encrypted 8CB5107EA7005AFF
+    network 192.168.4.0/24
   exit
   nas local
     key ascii-text encrypted 8CB5107EA7005AFF
     network 127.0.0.1/32
   exit
   domain default
+  exit
+  domain wlc.root
+    user tester
+      password ascii-text encrypted 8CB5107EA7005AFF
+    exit
   exit
   virtual-server default
     enable
@@ -234,10 +243,13 @@ exit
 
 tunnel softgre 1
   mode data
-  local address 192.168.1.1
+  local address 192.168.3.1
   default-profile
   enable
 exit
+
+snmp-server
+snmp-server community private ro
 
 security zone-pair trusted untrusted
   rule 1
@@ -425,41 +437,38 @@ wlc
     mode tunnel
     ap-profile default-ap
     airtune-profile default_airtune
-    ssid-profile default-ssid
+    ssid-profile levin-ssid
   exit
   airtune-profile default_airtune
     description "default_airtune"
   exit
-  ssid-profile default-ssid
-    description "default-ssid"
-    ssid "default-ssid"
+  ssid-profile levin-ssid
+    ssid "levin-ssid"
     radius-profile default-radius
-    vlan-id 3
-    security-mode WPA2_WPA3_1X
+    vlan-id 500
+    security-mode WPA2_1X
     mfp-mode capable
-    802.11kv
     band 2g
     band 5g
-    band 6g
     enable
   exit
   radio-2g-profile default_2g
     description "default_2g"
     tx-power maximal
-    tx-power-max maximal
     tx-power-min minimal
+    tx-power-max maximal
   exit
   radio-5g-profile default_5g
     description "default_5g"
     tx-power maximal
-    tx-power-max maximal
     tx-power-min minimal
+    tx-power-max maximal
   exit
   radio-6g-profile default_6g
     description "default_6g"
     tx-power maximal
-    tx-power-max maximal
     tx-power-min minimal
+    tx-power-max maximal
   exit
   ap-profile default-ap
     description "default-ap"
@@ -472,9 +481,9 @@ wlc
   exit
   radius-profile default-radius
     description "default-radius"
-    auth-address 192.168.1.1
+    auth-address 192.168.5.1
     auth-password ascii-text encrypted 8CB5107EA7005AFF
-    domain default
+    domain wlc.root
   exit
   wids-profile default-wids
     description "default-wids"
@@ -495,6 +504,7 @@ exit
 
 ip http server
 ip https server
+
 ```
 
 
