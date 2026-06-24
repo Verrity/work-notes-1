@@ -18,7 +18,10 @@ wlcctl -r 'ADD_FAKE_CLIENTS|68:13:e2:1f:59:80|3|82:00:13:70:20:00'
 ```bash unfold
 wlcctl -r 'GET_CLIENT_MACLIST|{"client-mac":"8"}|{"limit":"128"}'
 ```
-### Включить логи в консоли
+### Включить логи
+* логи хранятся в `/var/tmp`
+* Команда `getconf` - получить конфиг ТД
+* в консоли
 (server - в нем сертификаты)
 ```unfold
 configure
