@@ -10,10 +10,10 @@
 
 ```cfg title="WLC"
 #!/usr/bin/clish
-#390
-#1.39.x
-#2026-06-22
-#08:46:18
+#362
+#1.36.4
+#2026-05-15
+#11:43:51
 cluster
   cluster-interface bridge 2
   unit 1
@@ -28,32 +28,13 @@ exit
 hostname wlc-1 unit 1
 hostname wlc-2 unit 2
 
-object-group service ssh
-  port-range 22
+object-group network SYNC_DEST
+  ip address-range 192.168.2.12 unit 1
+  ip address-range 192.168.2.11 unit 2
 exit
-object-group service dhcp_server
-  port-range 67
-exit
-object-group service dhcp_client
-  port-range 68
-exit
-object-group service ntp
-  port-range 123
-exit
-object-group service dns
-  port-range 53
-exit
-object-group service radius_auth
-  port-range 1812
-exit
-object-group service sa
-  port-range 8043-8044
-exit
-object-group service airtune
-  port-range 8099
-exit
-object-group service web
-  port-range 443
+object-group network SYNC_SRC
+  ip address-range 192.168.2.11 unit 1
+  ip address-range 192.168.2.12 unit 2
 exit
 
 syslog max-files 3
@@ -61,12 +42,9 @@ syslog file-size 512
 syslog file tmpsys:syslog/default
   severity debug
 exit
-syslog file flash:syslog/radius_log
+syslog file tmpsys:syslog/radius_log
   severity debug
   match process-name radius-server
-exit
-syslog file flash:syslog/default
-  severity info
 exit
 syslog console
   severity warning
@@ -75,6 +53,10 @@ exit
 logging radius
 
 radius-server local
+  nas ap-shared
+    key ascii-text encrypted 8CB5107EA7005AFF
+    network 192.168.5.0/24
+  exit
   nas ap1
     key ascii-text encrypted 8CB5107EA7005AFF
     network 192.168.3.0/24
@@ -129,6 +111,9 @@ exit
 vlan 500
   force-up
 exit
+vlan 600
+  force-up
+exit
 
 no spanning-tree
 
@@ -150,7 +135,9 @@ bridge 1
   vrrp 1
     ip address 192.168.1.1/24
     priority 120 unit 1
+    priority 110 unit 2
     group 1
+    preempt disable
     enable
   exit
   enable
@@ -166,6 +153,7 @@ bridge 2
     priority 120 unit 1
     priority 110 unit 2
     group 1
+    preempt disable
     enable
   exit
   enable
@@ -181,6 +169,7 @@ bridge 3
     priority 120 unit 1
     priority 110 unit 2
     group 1
+    preempt disable
     enable
   exit
   enable
@@ -196,12 +185,13 @@ bridge 4
     priority 120 unit 1
     priority 110 unit 2
     group 1
+    preempt disable
     enable
   exit
   enable
 exit
 bridge 5
-  description "Clients"
+  description "AP's shared"
   vlan 500
   ip firewall disable
   ip address 192.168.5.11/24 unit 1
@@ -211,6 +201,23 @@ bridge 5
     priority 120 unit 1
     priority 110 unit 2
     group 1
+    preempt disable
+    enable
+  exit
+  enable
+exit
+bridge 6
+  description "Clients"
+  vlan 600
+  ip firewall disable
+  ip address 192.168.6.11/24 unit 1
+  ip address 192.168.6.12/24 unit 2
+  vrrp 6
+    ip address 192.168.6.1/24
+    priority 120 unit 1
+    priority 110 unit 2
+    group 1
+    preempt disable
     enable
   exit
   enable
@@ -220,7 +227,7 @@ interface gigabitethernet 1/0/1
   description "All data"
   mode switchport
   switchport mode trunk
-  switchport trunk allowed vlan add 100,300,500
+  switchport trunk allowed vlan add 100,300,500,600
 exit
 interface gigabitethernet 1/0/2
   description "Sync"
@@ -232,7 +239,7 @@ interface gigabitethernet 2/0/1
   description "All data"
   mode switchport
   switchport mode trunk
-  switchport trunk allowed vlan add 100,300,500
+  switchport trunk allowed vlan add 100,400,500,600
 exit
 interface gigabitethernet 2/0/2
   description "Sync"
@@ -251,138 +258,10 @@ exit
 snmp-server
 snmp-server community private ro
 
-security zone-pair trusted untrusted
-  rule 1
-    action permit
-    enable
-  exit
-exit
-security zone-pair trusted trusted
-  rule 1
-    action permit
-    enable
-  exit
-exit
-security zone-pair trusted self
-  rule 10
-    action permit
-    match protocol tcp
-    match destination-port object-group ssh
-    enable
-  exit
-  rule 20
-    action permit
-    match protocol icmp
-    enable
-  exit
-  rule 30
-    action permit
-    match protocol udp
-    match source-port object-group dhcp_client
-    match destination-port object-group dhcp_server
-    enable
-  exit
-  rule 40
-    action permit
-    match protocol udp
-    match destination-port object-group ntp
-    enable
-  exit
-  rule 50
-    action permit
-    match protocol tcp
-    match destination-port object-group dns
-    enable
-  exit
-  rule 60
-    action permit
-    match protocol udp
-    match destination-port object-group dns
-    enable
-  exit
-  rule 70
-    action permit
-    match protocol tcp
-    match destination-port object-group sa
-    enable
-  exit
-  rule 80
-    action permit
-    match protocol udp
-    match destination-port object-group radius_auth
-    enable
-  exit
-  rule 90
-    action permit
-    match protocol gre
-    enable
-  exit
-  rule 100
-    action permit
-    match protocol tcp
-    match destination-port object-group airtune
-    enable
-  exit
-  rule 110
-    action permit
-    match protocol tcp
-    match destination-port object-group web
-    enable
-  exit
-exit
-security zone-pair untrusted self
-  rule 1
-    action permit
-    match protocol udp
-    match source-port object-group dhcp_server
-    match destination-port object-group dhcp_client
-    enable
-  exit
-exit
-security zone-pair users self
-  rule 10
-    action permit
-    match protocol icmp
-    enable
-  exit
-  rule 20
-    action permit
-    match protocol udp
-    match source-port object-group dhcp_client
-    match destination-port object-group dhcp_server
-    enable
-  exit
-  rule 30
-    action permit
-    match protocol tcp
-    match destination-port object-group dns
-    enable
-  exit
-  rule 40
-    action permit
-    match protocol udp
-    match destination-port object-group dns
-    enable
-  exit
-exit
-security zone-pair users untrusted
-  rule 1
-    action permit
-    enable
-  exit
-exit
-
-security passwords default-expired
-
-nat source
-  ruleset factory
-    to zone untrusted
-    rule 10
-      description "replace 'source ip' by outgoing interface ip address"
-      action source-nat interface
-      enable
-    exit
-  exit
+ip failover
+  local-address object-group SYNC_SRC
+  remote-address object-group SYNC_DEST
+  vrrp-group 1
 exit
 
 ip dhcp-server
@@ -398,10 +277,10 @@ ip dhcp-server pool ap-vlan-300-pool
   exit
 exit
 ip dhcp-server pool users-pool
-  network 192.168.5.0/24
-  address-range 192.168.5.50-192.168.5.250
-  default-router 192.168.5.1
-  dns-server 192.168.5.1
+  network 192.168.6.0/24
+  address-range 192.168.6.50-192.168.6.250
+  default-router 192.168.6.1
+  dns-server 192.168.6.1
 exit
 ip dhcp-server pool ap-vlan-400-pool
   network 192.168.4.0/24
@@ -414,13 +293,29 @@ ip dhcp-server pool ap-vlan-400-pool
     suboption 15 ascii-text "https://192.168.3.1:8043"
   exit
 exit
+ip dhcp-server pool ap-vlan-500-pool
+  network 192.168.5.0/24
+  address-range 192.168.5.50-192.168.5.250
+  default-router 192.168.5.1
+  dns-server 192.168.5.1
+  option 42 ip-address 192.168.5.1
+  vendor-specific
+    suboption 12 ascii-text "192.168.3.1"
+    suboption 15 ascii-text "https://192.168.3.1:8043"
+  exit
+exit
+ip dhcp-server failover
+  mode active-standby
+  enable
+exit
 
 softgre-controller
   nas-ip-address 127.0.0.1
+  failover
   data-tunnel configuration wlc
   aaa radius-profile default_radius
   keepalive-disable
-  service-vlan add 500
+  service-vlan add 600
   enable
 exit
 
@@ -432,6 +327,7 @@ wlc
   airtune
     enable
   exit
+  failover
   ap-location default-location
     description "default-location"
     mode tunnel
@@ -445,34 +341,34 @@ wlc
   ssid-profile levin-ssid
     ssid "levin-ssid"
     radius-profile default-radius
-    vlan-id 500
+    vlan-id 600
     security-mode WPA2_1X
-    mfp-mode capable
     band 2g
     band 5g
     enable
   exit
   radio-2g-profile default_2g
     description "default_2g"
-    tx-power maximal
-    tx-power-min minimal
-    tx-power-max maximal
   exit
   radio-5g-profile default_5g
     description "default_5g"
-    tx-power maximal
-    tx-power-min minimal
-    tx-power-max maximal
   exit
   radio-6g-profile default_6g
     description "default_6g"
-    tx-power maximal
-    tx-power-min minimal
-    tx-power-max maximal
   exit
   ap-profile default-ap
     description "default-ap"
     password ascii-text encrypted 8CB5107EA7005AFF
+    trace
+      networkd enable
+      networkd logfile-limit 2000
+      hostapd enable
+      hostapd logfile-limit 2000
+      configd enable
+      configd logfile-limit 2000
+      netconf enable
+      netconf logfile-limit 2000
+    exit
     services
       ip ssh server
       ip http server
@@ -481,7 +377,7 @@ wlc
   exit
   radius-profile default-radius
     description "default-radius"
-    auth-address 192.168.5.1
+    auth-address 192.168.6.1
     auth-password ascii-text encrypted 8CB5107EA7005AFF
     domain wlc.root
   exit
@@ -502,17 +398,23 @@ ntp enable
 ntp server 192.168.1.20
 exit
 
+crypto-sync
+  enable
+exit
+
 ip http server
 ip https server
+ip http failover
 
 ```
 
 
 ```cfg title="MES"
+
 #Building configuration...
 #ISS config ver. 10; SW ver. 10.4.3.4 (67eeccdf) for MES2408PL. Do not remove or edit this line
-!
-debug-logging log-path flash:/mnt/
+!   
+debug-logging log-path flash:/mnt/  
 !
 no logging console
 !
@@ -520,66 +422,67 @@ no spanning-tree
 !
 vlan 100,200,300-400,500
   vlan active
-!
-username guest password encrypted P6Vt3vbV+ULZ4bn2O+qpew== privilege 1
-!
-mac access-list extended 1
-  deny any any
+!                      
+username guest password encrypted P6Vt3vbV+ULZ4bn2O+qpew== privilege 1    
+!  
+mac access-list extended 1 
+  deny any any 
 !
 interface vlan 1
   no ip address
-!
+! 
 interface vlan 100
   ip address 192.168.1.30 255.255.255.0
-!
+! 
 interface vlan 300
   ip address 192.168.3.30 255.255.255.0
-!
+! 
 interface vlan 400
   ip address 192.168.4.30 255.255.255.0
-!
+! 
 interface vlan 500
   ip address 192.168.5.30 255.255.255.0
-!
+! 
 interface gigabitethernet 1/0/1
   description "PC"
   switchport general allowed vlan add 100,200,300,400,500
-!
+! 
 interface gigabitethernet 1/0/2
   description "WLC-1 68:13:E2:7E:82:46 Data"
   switchport general allowed vlan add 100,300
-  switchport general pvid 100
-!
+  switchport general pvid 100    
+! 
 interface gigabitethernet 1/0/3
   description "WLC-2 90:54:B7:3B:A1:40 Data"
   switchport general allowed vlan add 100,400
-  switchport general pvid 100
-!
+  switchport general pvid 100    
+! 
 interface gigabitethernet 1/0/4
   description "WLC-1 68:13:E2:7E:82:46 Sync + Dhcp"
-  switchport general allowed vlan add 200,400
-!
+  switchport general allowed vlan add 200,400    
+! 
 interface gigabitethernet 1/0/5
   description "WLC-2 90:54:B7:3B:A1:40 Sync + Dhcp"
-  switchport general allowed vlan add 200,300
-!
+  switchport general allowed vlan add 200,300    
+! 
 interface gigabitethernet 1/0/6
   description "WEP-30L 90:54:b7:c1:1f:30"
   switchport mode access
-  switchport access vlan 300
-!
+  switchport access vlan 300    
+! 
 interface gigabitethernet 1/0/7
   description "WEP-3ax 68:13:e2:1f:59:80"
   switchport mode access
-  switchport access vlan 400
-!
+  switchport access vlan 400    
+! 
 interface gigabitethernet 1/0/8
   description "WEP-2ac e4:5a:d4:f7:cf:a0"
   switchport mode access
-  switchport access vlan 400
-!
+  switchport access vlan 400    
+! 
 set ip http disable
-!
+!  
 end
+
 ```
 
