@@ -256,7 +256,7 @@ tunnel softgre 1
 exit
 
 snmp-server
-snmp-server community private ro
+snmp-server community public ro
 
 ip failover
   local-address object-group SYNC_SRC
