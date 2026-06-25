@@ -394,6 +394,8 @@ exit
 ip ssh server
 
 ip tftp client timeout 45
+clock timezone gmt +7
+
 ntp enable
 ntp server 192.168.1.20
 exit
