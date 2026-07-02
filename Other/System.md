@@ -347,7 +347,7 @@ virsh --connect qemu:///system start "ubuntu-22-04-lts-server"
 ```bash folded title="Запустить UI приложение"
 virt-manager --connect qemu:///system --show-domain-console "ubuntu-22-04-lts-server"
 ```
-```unfold title="Перегенерировать интерфейсы эмелятора"
+```fold title="Перегенерировать интерфейсы эмелятора"
 sudo virsh net-destroy default 2>/dev/null
 sudo virsh net-undefine default
 sudo virsh net-define /usr/share/libvirt/networks/default.xml
@@ -368,5 +368,15 @@ sudo virsh net-autostart virbr1
 [Инструкция по установке](https://www.dmosk.ru/miniinstruktions.php?mini=ntp-server-ubuntu)
 
 #### VSCode
+
+Ключи clangd для нормальной работы
+```unfold
+--background-index
+--clang-tidy
+--header-insertion=iwyu
+--compile-commands-dir=/home/developer
+--j=4
+```
+
 Профиль ПК: ![[Resources/work-pc.code-profile]]
 Профиль ПК докер: ![[Resources/work-pc-docker.code-profile]]
