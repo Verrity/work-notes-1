@@ -145,3 +145,7 @@ git format-patch -3 --stdout > pat
 ```bash unfold title"Посмотреть файл в другой ветке не переходя на нее"
 git show <branch>:<filepath>
 ```
+
+```bash unfold title"Отменить все локальные изменения в текущем репозитории и рекурсивно во всех его сабмодулях"
+git restore . --recurse-submodules
+```
