@@ -29,3 +29,39 @@ all:
 ```bash unfold
 clear; make unconfig; yes | make clean-all; make config-wlc30; make all && esr-validator ~/esr/esr-base/images/arm64/wlc30.firmware
 ```
+
+
+`bear` for Makefile compile_commands generation (`sudo apt install bear`)
+```bash unfold
+clear; make unconfig; yes | make clean-all ; make config-wlc30 ; bear make all && esr-validator ~/esr/esr-base/images/arm64/wlc30.firmware
+```
+
+vscode clangd settings
+```json unfold
+`/**************************************** Настройки clangd ****************************************/`
+    `"clangd.inactiveRegions.useBackgroundHighlight"``:` `true``,`
+    `"clangd.path"``:` `"/usr/bin/clangd-18"``,`
+    `"clangd.arguments"``: [`
+        `// Фоновая индексация файлов`
+        `"--background-index"``,`
+        `// Статический анализатор кода (ошибки, предупреждения, автоматические исправления)`
+        `"--clang-tidy"``,`
+        `// Количество используемых для анализа кода потоков` 
+        `"-j=4"``,`
+        `// Детальное описание функций в подсказках`
+        `"--completion-style=detailed"``,`
+        `// Автоматическое добавление #inlcude в файлы`
+        `"--header-insertion=never"``,`
+        `// Папка с файлом compile_commands.json`
+        `"--compile-commands-dir=${workspaceFolder}"``,`
+        `// Используемый компилятор`
+        `"--query-driver=/opt/x86_64-linux-gnu/bin/x86_64-linux-gnu-{gcc,g++}"``,`
+        `// Автоматическая вставка аргументов при вызове функции`
+        `"--function-arg-placeholders=0"`
+    `],`
+    `"clangd.fallbackFlags"``: [`
+        `"--target=x86_64-linux-gnu"`
+    `],`
+    `"clangd.onConfigChanged"``:` `"restart"``,`
+/**************************************************************************************************/
+```
