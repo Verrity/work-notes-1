@@ -8,7 +8,9 @@
 ---
 
 
-Работа с файлами MES страница 87
+Работа с файлами MES 
+страница 87
+[[MES_Series_user_manual_10.4.5.2.pdf#page=87|MES_Series_user_manual_10.4.5.2, p.87]]
 ![[MES_Series_user_manual_10.4.5.2.pdf#height=800]]]
 
 Типы портов:
