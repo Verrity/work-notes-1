@@ -15,9 +15,9 @@
 		```conf unfold
 		subnet 192.168.1.0 netmask 255.255.255.0 {
 			option routers 192.168.1.111;
-			range 192.168.1.3 192.168.1.111;
-			# 0F:<data_len>:<data...>;
-			# OF:1C (28): https://192.168.1.111:8043
+			range 192.168.1.3 192.168.1.110;
+			# <suboption 15 [1 HEX]>:<data_len [1 HEX]>:<data> [N HEX (B:B:...)]
+			# OF:1A:(https://192.168.1.111:8043)ASCII_IN_HEX
 			option vendor-encapsulated-options 0F:1A:68:74:74:70:73:3A:2F:2F:31:39:32:2E:31:36:38:2E:31:2E:31:31:31:3A:38:30:34:33;
 		}
 		```
